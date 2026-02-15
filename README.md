@@ -5,26 +5,33 @@ Dementia Tracker v2 is a dedicated support application designed for caregivers w
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Python 3.12+
+- FastAPI
 - Docker (optional)
 - Make (optional)
 
 ### Local Installation
+
 1. **Setup Environment**:
+
    ```bash
    python -m venv venv
    source venv/bin/activate  # On Windows: venv\Scripts\activate
    ```
 
 2. **Install Dependencies**:
+
    ```bash
    pip install -r requirements.txt
    ```
 
 3. **Run Application**:
+
    ```bash
    python -m uvicorn app:app --reload
    ```
+
    Access the server at `http://localhost:8000`.
 
 ## 🐳 Docker Usage
@@ -32,6 +39,7 @@ Dementia Tracker v2 is a dedicated support application designed for caregivers w
 This project is fully containerized for consistent development and deployment environments.
 
 ### Build and Run
+
 ```bash
 # Build the image
 docker build -t dementia-tracker-v2 .
@@ -41,6 +49,7 @@ docker run -p 8000:8000 dementia-tracker-v2
 ```
 
 ### Health Check
+
 Once running, you can verify the system status at:
 `http://localhost:8000/health`
 
@@ -55,6 +64,7 @@ Once running, you can verify the system status at:
 ## 📜 Available Commands (Makefile)
 
 If you have `make` installed, you can use the following shortcuts:
+
 - `make install`: Install dependencies from requirements.txt.
 - `make run`: Launch the FastAPI server with hot-reload.
 - `make build`: Build the Docker image.
@@ -66,10 +76,13 @@ If you have `make` installed, you can use the following shortcuts:
 The project includes a suite of automated tests using `pytest`.
 
 ### Run Tests
+
 ```bash
 make test
 ```
+
 Or manually:
+
 ```bash
 pytest test.py
 ```

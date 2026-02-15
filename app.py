@@ -11,18 +11,18 @@ class HealthStatus(BaseModel):
 
 
 @app.get("/")
-def home():
+async def home():
 	return {
-		"message": "Welcome to the Dementia Tracker V2 API"
+		"message": "Welcome to the Dementia Tracker V1 API"
 	}
 
 @app.get("/health", response_model=HealthStatus)
 async def health():
 	"""
-	Docstring for health
+	Checks the health status of the API and its dependencies.
 	"""
 	return {
 		"status": "up",
 		"database": "disconnected",
-		"version": "2.0.0"
+		"version": "1.0.0"
 	}

@@ -22,7 +22,7 @@ docker-run:
 	docker run -p 8000:8000 dementia-tracker-v2
 
 test:
-	$(PYTHON) -m pytest test.py
+	$(PYTHON) -m pytest test.py -v
 
 clean:
 ifeq ($(OS),Windows_NT)
