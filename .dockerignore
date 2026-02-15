@@ -1,0 +1,14 @@
+# This file ensures that unnecessary data like .venv and __pycache__ aren't included in your Docker image, keeping it clean and fast.
+
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+.env
+.git/
+.gitignore
+*.egg-info/
+dist/
+build/

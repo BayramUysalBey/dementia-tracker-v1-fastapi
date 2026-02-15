@@ -15,8 +15,14 @@ install: requirements.txt
 run:
 	$(PYTHON) -m uvicorn app:app --reload
 
-build: setup.py
-	$(PYTHON) setup.py build bdist_wheel
+build: 
+	docker build -t dementia-tracker-v2 .
+
+docker-run:
+	docker run -p 8000:8000 dementia-tracker-v2
+
+test:
+	$(PYTHON) -m pytest test.py
 
 clean:
 ifeq ($(OS),Windows_NT)
