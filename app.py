@@ -1,10 +1,8 @@
 from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 app = FastAPI()
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class HealthStatus(BaseModel):
 	status: str
@@ -20,9 +18,6 @@ async def home():
 
 @app.get("/health", response_model=HealthStatus)
 async def health():
-	"""
-	Checks the health status of the API and its dependencies.
-	"""
 	return {
 		"status": "up",
 		"database": "disconnected",
