@@ -1,6 +1,6 @@
-# Dementia Tracker v2
+# Dementia Tracker v1
 
-Dementia Tracker v2 is a dedicated support application designed for caregivers who provide home care for dementia patients. This project leverages FastAPI to provide a modern, high-performance backend infrastructure for tracking and management.
+Dementia Tracker v1 is a dedicated support application designed for caregivers who provide home care for dementia patients. This project leverages FastAPI to provide a modern, high-performance backend infrastructure for tracking and management.
 
 ## 🚀 Quick Start
 
@@ -29,7 +29,7 @@ Dementia Tracker v2 is a dedicated support application designed for caregivers w
 3. **Run Application**:
 
    ```bash
-   python -m uvicorn app:app --reload
+   python -m uvicorn app.main:app --reload
    ```
 
    Access the server at `http://localhost:8000`.
@@ -42,10 +42,10 @@ This project is fully containerized for consistent development and deployment en
 
 ```bash
 # Build the image
-docker build -t dementia-tracker-v2 .
+docker build -t dementia-tracker-v1 .
 
 # Run the container
-docker run -p 8000:8000 dementia-tracker-v2
+docker run -p 8000:8000 dementia-tracker-v1
 ```
 
 ### Health Check
@@ -55,11 +55,15 @@ Once running, you can verify the system status at:
 
 ## 🛠 Project Structure
 
-- `app.py`: Main FastAPI application logic and endpoints.
+- `app/main.py`: Main FastAPI application entry point.
+- `app/api/routers/`: Modular route handlers (items, status).
+- `app/schemas/`: Pydantic data models for validation.
+- `app/core/`: Application settings and configuration.
 - `Makefile`: Convenient shortcuts for common tasks (install, run, build, clean).
 - `Dockerfile`: Production-ready container configuration.
 - `.dockerignore`: Optimized build exclusions.
 - `requirements.txt`: Python package dependencies.
+- `tests/`: Automated test suite.
 
 ## 📜 Available Commands (Makefile)
 
@@ -84,7 +88,7 @@ make test
 Or manually:
 
 ```bash
-pytest test.py
+pytest tests/test.py
 ```
 
 ---
