@@ -1,6 +1,7 @@
 from typing import List, Optional
 from fastapi import APIRouter, HTTPException, UploadFile
-from app.schemas.items import Item, ItemCreate, User, FileUploadResponse
+from app.schemas.items import Item, ItemCreate, FileUploadResponse
+from app.schemas.users import User
 
 router = APIRouter()
 
