@@ -16,10 +16,6 @@ class ItemCreate(BaseModel):
     user_id: int
     category: str
 
-class User(BaseModel):
-    id: int
-    username: str
-
 class FileUploadResponse(BaseModel):
     filename: str
     content_type: str
