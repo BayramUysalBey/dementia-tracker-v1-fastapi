@@ -11,7 +11,8 @@ def test_root_message():
 def test_health():
     response = client.get("/health")
     assert response.status_code == 200
-    assert response.json()["status"] == "up"
+    assert response.json()["status"] == "ok"
+    assert response.json()["database"] == "connected"
 
 def test_get_items_list():
     response = client.get("/items")
