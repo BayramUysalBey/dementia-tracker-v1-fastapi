@@ -7,3 +7,4 @@ async def test_health_endpoint_db_connection(client: AsyncClient):
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "ok"
+    assert response.json()["database"] == "connected"
