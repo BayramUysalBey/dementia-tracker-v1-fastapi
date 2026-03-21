@@ -26,7 +26,18 @@ Dementia Tracker v1 is a dedicated support application designed for caregivers w
    pip install -r requirements.txt
    ```
 
-3. **Run Application**:
+3. **Database Setup**:
+
+   Before running the application, you must configure your local database:
+   - Create a copy of the `.env.example` file and instantly rename it strictly to `.env`.
+   - Ensure you have a running PostgreSQL instance that exactly matches the `DATABASE_URL` credentials you set in your new `.env` file.
+   - Run the initial migrations to construct the database tables using Alembic:
+
+     ```bash
+     alembic upgrade head
+     ```
+
+4. **Run Application**:
 
    ```bash
    python -m uvicorn app.main:app --reload
