@@ -17,5 +17,5 @@ class ItemCreate(BaseModel):
     category: str
 
 class FileUploadResponse(BaseModel):
-    filename: str
-    content_type: str
+    filename: str | None
+    content_type: str | None

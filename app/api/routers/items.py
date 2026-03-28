@@ -1,7 +1,8 @@
+
 from typing import List, Optional
 from fastapi import APIRouter, HTTPException, UploadFile
 from app.schemas.items import Item, ItemCreate, FileUploadResponse
-from app.schemas.users import User
+from app.schemas.users import UserBase
 
 router = APIRouter()
 
@@ -13,10 +14,11 @@ items: List[Item] = [
     Item(id=3, name="Simplified Phone", price=120.0, user_id=2, category="Communication")
 ]
 
-users: List[User] = [
-    User(id=1, username="caregiver_alice"),
-    User(id=2, username="caregiver_bob")
+users = [
+    {"id": 1, "name": "alice", "email": "alice@email.com", "username": "caregiver_alice"},
+    {"id": 2, "name": "bob", "email": "bob@email.com", "username": "caregiver_bob"}
 ]
+
 
 @router.get("/items", response_model=List[Item])
 async def get_items():
@@ -48,9 +50,9 @@ async def delete_item(item_id: int):
     items.pop(item_idx)
     return None
 
-@router.get("/users/{user_id}", response_model=User)
+@router.get("/users/{user_id}", response_model=UserBase)
 async def get_user(user_id: int):
-    user = next((u for u in users if u.id == user_id), None)
+    user = next((u for u in users if u["id"] == user_id), None)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user

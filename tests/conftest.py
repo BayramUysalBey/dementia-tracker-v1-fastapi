@@ -23,24 +23,33 @@ async def setup_test_database():
         await conn.execute(text(f"DROP DATABASE IF EXISTS {TEST_DB_NAME}"))
         await conn.execute(text(f"CREATE DATABASE {TEST_DB_NAME}"))
     await administrator_engine.dispose()
-
     
+    test_engine = create_async_engine(TEST_DB_URL, echo=False)
+    db_session_module.engine = test_engine
+    db_session_module.AsyncSessionLocal = async_sessionmaker(bind=test_engine)    
     alembic_cfg = Config("alembic.ini")
     alembic_cfg.set_main_option("sqlalchemy.url", TEST_DB_URL)
 
     command.upgrade(alembic_cfg, "head")
 
-    db_session_module.engine = administrator_engine
-    db_session_module.AsyncSessionLocal = async_sessionmaker(bind=administrator_engine)
+    db_session_module.engine = test_engine
+    db_session_module.AsyncSessionLocal = async_sessionmaker(bind=test_engine)
     
     yield 
     
+    await test_engine.dispose()
     await administrator_engine.dispose()
+    dumper_engine = create_async_engine(DEFAULT_DB_URL, isolation_level="AUTOCOMMIT")
     
-    async with administrator_engine.connect() as conn:
-
+    async with dumper_engine.connect() as conn:
+        # Force disconnect anyone else who might have snuck in (optional, but a great safeguard)
+        await conn.execute(text(f"""
+            SELECT pg_terminate_backend(pg_stat_activity.pid)
+            FROM pg_stat_activity
+            WHERE pg_stat_activity.datname = '{TEST_DB_NAME}' AND pid <> pg_backend_pid();
+        """))
         await conn.execute(text(f"DROP DATABASE {TEST_DB_NAME}"))
-    await administrator_engine.dispose()
+    await dumper_engine.dispose()
 
 @pytest_asyncio.fixture
 async def client():
