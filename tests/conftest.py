@@ -12,7 +12,7 @@ from app.core.settings import settings
 import app.db.session as db_session_module
 
 TEST_DB_NAME = settings.TEST_DB_NAME
-BASE_URL = settings.BASE_URL
+BASE_URL = settings.DATABASE_URL.rsplit('/', 1)[0] if settings.DATABASE_URL else ""
 TEST_DB_URL = f"{BASE_URL}/{TEST_DB_NAME}"
 DEFAULT_DB_URL = f"{BASE_URL}/postgres"
 

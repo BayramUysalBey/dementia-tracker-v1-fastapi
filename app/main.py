@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api.routers import status, items
+from app.api.routers import api_router
 from app.core.settings import settings
 
 app = FastAPI(
@@ -8,5 +8,4 @@ app = FastAPI(
     version=settings.VERSION
 )
 
-app.include_router(status.router)
-app.include_router(items.router)
+app.include_router(api_router, prefix="/api")

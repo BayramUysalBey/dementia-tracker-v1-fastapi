@@ -1,0 +1,38 @@
+$kind: http-request
+name: New Request
+url: http://localhost:8000/api/v1/users/create
+method: POST
+body:
+  type: json
+  content: "$kind: http-request\r
+
+    name: New Request\r
+
+    url: 'http://localhost:8000/api/v1/users/create'\r
+
+    method: POST\r
+
+    headers:\r
+
+    \  - key: Content-Type\r
+
+    \    value: application/json\r
+
+    body:\r
+
+    \  type: json\r
+
+    \  content: |-\r
+
+    \    {\r
+
+    \      \"name\": \"Bayram Uysal\",\r
+
+    \      \"email\": \"bayram.uysal@test.com\",\r
+
+    \      \"password\": \"securepassword123!\"\r
+
+    \    }\r
+
+    order: 1774962971888"
+order: 1774962971888

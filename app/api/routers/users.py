@@ -1,26 +1,36 @@
 import uuid
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, status, HTTPException, Header
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.session import get_db
 from app.schemas.users import UserRead, UserCreate, UserUpdate
-from app.services import users as user_service
 from app.db.models.users import User
+from app.services.users import UserService
+from app.db.session import get_db
+from app.db.crud.users import UserCRUD
 
-router = APIRouter(prefix="/users", tags=["users"])
+router = APIRouter()
 
-async def get_current_user(db: AsyncSession = Depends(get_db)) -> User:
-    users = await user_service.get_all_users(db, limit=1)
-    if not users:
+async def get_user_crud(db: AsyncSession = Depends(get_db)) -> UserCRUD:
+    return UserCRUD(db)
+
+async def get_user_service(
+    db: AsyncSession = Depends(get_db), 
+    crud: UserCRUD = Depends(get_user_crud)
+) -> UserService:
+    return UserService(db, crud)
+
+async def get_user(
+    secret_user_id: uuid.UUID | None = Header(default=None, description="Temporary auth via Secret-User-Id"),
+    user_service: UserService = Depends(get_user_service)
+) -> User:
+    """Dependency to look up a user and ensure they exist."""
+    if not secret_user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="No users found. Please create a user first."
+            detail="Header Secret-User-Id is required for temporary authentication"
         )
-    return users[0]
-
-async def get_user(user_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> User:
-    user = await user_service.get_user_by_id(db, user_id)
+    user = await user_service.get_current_user(secret_user_id)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -28,32 +38,40 @@ async def get_user(user_id: uuid.UUID, db: AsyncSession = Depends(get_db)) -> Us
         )
     return user
 
-@router.post("/create", response_model=UserRead)
-async def create_user(user_in: UserCreate, db: AsyncSession = Depends(get_db)):
-    existing_user = await user_service.get_user_by_email(db, user_in.email)
-    if existing_user:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User with this email already exists"
-        )
-    return await user_service.create_user(db, user_in)
+
+@router.post("/create", response_model=UserRead, status_code=status.HTTP_201_CREATED)
+async def create_user(
+    user_in: UserCreate, 
+    user_service: UserService = Depends(get_user_service)
+):
+    return await user_service.create_user(user_in)
 
 @router.get("/me", response_model=UserRead)
-async def read_user_me(current_user: User = Depends(get_current_user)):
+async def read_user_me(
+    current_user: User = Depends(get_user)
+):
     return current_user
+
+
 
 @router.get("/", response_model=List[UserRead])
 async def read_users(
     skip: int = 0, 
     limit: int = 100, 
-    db: AsyncSession = Depends(get_db)
+    user_service: UserService = Depends(get_user_service)
 ):
-    return await user_service.get_all_users(db, skip=skip, limit=limit)
+    users = await user_service.get_all_users(skip=skip, limit=limit)
+    if not users:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="No users found"
+        )
+    return list(users)
 
 @router.patch("/me", response_model=UserRead)
 async def update_user_me(
     user_in: UserUpdate,
-    current_user: User = Depends(get_current_user),
-    db: AsyncSession = Depends(get_db)
+    current_user: User = Depends(get_user),
+    user_service: UserService = Depends(get_user_service)
 ):
-    return await user_service.update_user(db, current_user.id, user_in)
+    return await user_service.update_user(current_user.id, user_in)

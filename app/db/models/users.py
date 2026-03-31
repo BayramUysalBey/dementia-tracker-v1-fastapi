@@ -9,9 +9,8 @@ from app.db.base_model import BaseDBModel
 from app.db.mixins import TimestampMixin
 
 
-
 class User(BaseDBModel, TimestampMixin):
-
+	__tablename__: str = "users"	
 	id: Mapped[uuid.UUID] = mapped_column(
 		primary_key=True,
 		default=uuid.uuid4,
@@ -27,9 +26,9 @@ class User(BaseDBModel, TimestampMixin):
 	inviter: Mapped[Optional["User"]] = relationship(
 		"User",
 		remote_side=[id],
-		back_populates="invitiees"
+		back_populates="invitees"
 	)
-	inviteees: Mapped[List["User"]] = relationship(
+	invitees: Mapped[List["User"]] = relationship(
 		"User",
 		back_populates="inviter"
 	)
