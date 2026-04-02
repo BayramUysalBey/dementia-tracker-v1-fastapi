@@ -1,6 +1,8 @@
+import uuid
 import pytest
 from httpx import AsyncClient
 from app.main import app
+from app.db.models.users import User
 
 @pytest.mark.asyncio
 async def test_root_message(client: AsyncClient):

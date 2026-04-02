@@ -9,3 +9,7 @@ app = FastAPI(
 )
 
 app.include_router(api_router, prefix="/api")
+
+@app.get("/")
+async def main():
+    return {"message": "Welcome to the Dementia Tracker V1 API!"}

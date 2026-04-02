@@ -24,7 +24,6 @@ async def get_user(
     secret_user_id: uuid.UUID | None = Header(default=None, description="Temporary auth via Secret-User-Id"),
     user_service: UserService = Depends(get_user_service)
 ) -> User:
-    """Dependency to look up a user and ensure they exist."""
     if not secret_user_id:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
