@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from sqlalchemy import pool
 from app.core.settings import settings
 from app.db.base_model import BaseDBModel
+from app.db.models.users import User
 
 from alembic import context
 
@@ -23,6 +24,12 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
+
+print("--- ALEMBIC DEBUG ---")
+print(f"Imported User: {User}")
+print(f"Tables in Metadata: {BaseDBModel.metadata.tables.keys()}")
+print("----------------------")
+
 target_metadata = BaseDBModel.metadata
 
 # other values from the config, defined by the needs of env.py,
@@ -56,3 +63,8 @@ async def run_async_migrations():
 def run_migrations_online() -> None:
     """Run migrations in 'online' mode."""
     asyncio.run(run_async_migrations())
+
+if context.is_offline_mode():
+    pass # Add run_migrations_offline() if needed later
+else:
+    run_migrations_online()
