@@ -14,7 +14,6 @@ config = context.config
 if not config.get_main_option("sqlalchemy.url"):
     config.set_main_option("sqlalchemy.url", settings.DATABASE_URL or "")
 
-print(f"CRITICAL DEBUG - Alembic is connecting to: {config.get_main_option('sqlalchemy.url')}")
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.

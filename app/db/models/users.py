@@ -21,7 +21,7 @@ class User(BaseDBModel, TimestampMixin):
 	hashed_password: Mapped[str] = mapped_column(String(255))
 	username: Mapped[str] = mapped_column(String(255), unique=True, index=True)
 	last_login: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
-	invited_by: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("users.id"), nullable=True)
+	invited_by: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
 
 	inviter: Mapped[Optional["User"]] = relationship(
 		"User",

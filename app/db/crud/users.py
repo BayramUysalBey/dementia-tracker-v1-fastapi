@@ -3,12 +3,13 @@ from typing import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from app.db.models.users import User
-from app.schemas.users import UserCreate, UserUpdate
+from app.db.session import get_db
+from fastapi import Depends
 
 class UserCRUD:
-    def __init__(self, db: AsyncSession):
+    def __init__(self, db: AsyncSession = Depends(get_db)):
         self.db = db
-
+    
     async def create(self, obj_in: dict) -> User:
         db_object = User(**obj_in)
         self.db.add(db_object)
@@ -35,3 +36,5 @@ class UserCRUD:
         self.db.add(db_object)
         await self.db.flush()
         return db_object
+    
+	

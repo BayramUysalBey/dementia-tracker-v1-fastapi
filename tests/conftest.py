@@ -56,3 +56,17 @@ async def client():
     transport = ASGITransport(app=app) # Wrap the app in ASGITransport (httpx version issue and solution)
     async with AsyncClient(transport=transport, base_url="http://test") as ac:
         yield ac
+
+@pytest_asyncio.fixture
+async def async_db():
+    async with db_session_module.AsyncSessionLocal() as session:
+        yield session
+
+@pytest.fixture
+def user_mock_data():
+    return {
+        "name": "Simple User",
+        "username": "simpleuser",
+        "email": "simple@example.com",
+        "password": "securepassword123"
+    }
