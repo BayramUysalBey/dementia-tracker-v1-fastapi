@@ -1,7 +1,7 @@
 Dementia Tracker Project - Auto-Generated Tickets
 ===============================================
 
-CAT-101 (PROJECT) Refactor User Model to New Schema
+CAT-56 (PROJECT) Refactor User Model to New Schema
 
 The Task
 Update the existing User model to fit the new architecture.
@@ -21,7 +21,7 @@ Modify app/db/models/users.py.
 Modify app/schemas/users.py.
 
 -------------------------------------------------------------------------------------
-CAT-102 (PROJECT) Refactor User CRUD and Service Layers
+CAT-57 (PROJECT) Refactor User CRUD and Service Layers
 
 The Task
 Update the User CRUD and Service layers to handle the new schema fields.
@@ -38,7 +38,7 @@ Technical Implementation Details
 Modify app/db/crud/users.py and app/services/users.py to handle the new Pydantic schema fields.
 
 -------------------------------------------------------------------------------------
-CAT-103 (PROJECT) Refactor User API Endpoints
+CAT-58 (PROJECT) Refactor User API Endpoints
 
 The Task
 Update the User API endpoints to reflect new schema changes.
@@ -54,7 +54,7 @@ Technical Implementation Details
 Modify app/api/routers/users.py to ensure the updated Pydantic models are used for request validation and response serialization.
 
 -------------------------------------------------------------------------------------
-CAT-104 (LEARNING) Understanding Schema Refactoring and Migrations
+CAT-59 (LEARNING) Understanding Schema Refactoring and Migrations
 
 The Task
 Learn how to safely modify an existing database schema and propagate changes through the architecture.
@@ -76,7 +76,7 @@ Technical Implementation Details
 Read Alembic documentation on autogenerate and data migrations.
 
 -------------------------------------------------------------------------------------
-CAT-105 (PROJECT) Account Database Models
+CAT-60 (PROJECT) Account Database Models
 
 The Task
 The objective of this task is to define the structure of our account data.
@@ -97,7 +97,7 @@ File: app/schemas/account.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-106 (PROJECT) Account CRUD Layer
+CAT-61 (PROJECT) Account CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for account.
@@ -115,7 +115,7 @@ File: app/db/crud/account.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-107 (PROJECT) Account Service Layer
+CAT-62 (PROJECT) Account Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the account module.
@@ -133,7 +133,7 @@ File: app/services/account.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-108 (PROJECT) Account API Endpoints
+CAT-63 (PROJECT) Account API Endpoints
 
 The Task
 The goal of this task is to expose the account functionality via FastAPI routes.
@@ -152,7 +152,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-109 (LEARNING) Account Architecture and Flow
+CAT-64 (LEARNING) Account Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the account module.
@@ -174,7 +174,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-110 (PROJECT) Auth Database Models
+CAT-65 (PROJECT) Auth Database Models
 
 The Task
 The objective of this task is to define the structure of our auth data.
@@ -195,7 +195,7 @@ File: app/schemas/auth.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-111 (PROJECT) Auth CRUD Layer
+CAT-66 (PROJECT) Auth CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for auth.
@@ -213,7 +213,7 @@ File: app/db/crud/auth.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-112 (PROJECT) Auth Service Layer
+CAT-67 (PROJECT) Auth Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the auth module.
@@ -231,7 +231,7 @@ File: app/services/auth.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-113 (PROJECT) Auth API Endpoints
+CAT-68 (PROJECT) Auth API Endpoints
 
 The Task
 The goal of this task is to expose the auth functionality via FastAPI routes.
@@ -250,7 +250,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-114 (LEARNING) Auth Architecture and Flow
+CAT-69 (LEARNING) Auth Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the auth module.
@@ -272,7 +272,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-115 (PROJECT) Permissions Database Models
+CAT-70 (PROJECT) Permissions Database Models
 
 The Task
 The objective of this task is to define the structure of our permissions data.
@@ -293,7 +293,7 @@ File: app/schemas/permissions.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-116 (PROJECT) Permissions CRUD Layer
+CAT-71 (PROJECT) Permissions CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for permissions.
@@ -311,7 +311,7 @@ File: app/db/crud/permissions.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-117 (PROJECT) Permissions Service Layer
+CAT-72 (PROJECT) Permissions Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the permissions module.
@@ -329,7 +329,7 @@ File: app/services/permissions.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-118 (PROJECT) Permissions API Endpoints
+CAT-73 (PROJECT) Permissions API Endpoints
 
 The Task
 The goal of this task is to expose the permissions functionality via FastAPI routes.
@@ -348,7 +348,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-119 (LEARNING) Permissions Architecture and Flow
+CAT-74 (LEARNING) Permissions Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the permissions module.
@@ -370,7 +370,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-120 (PROJECT) Medication Database Models
+CAT-75 (PROJECT) Medication Database Models
 
 The Task
 The objective of this task is to define the structure of our medication data.
@@ -391,7 +391,7 @@ File: app/schemas/medication.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-121 (PROJECT) Medication CRUD Layer
+CAT-76 (PROJECT) Medication CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for medication.
@@ -409,7 +409,7 @@ File: app/db/crud/medication.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-122 (PROJECT) Medication Service Layer
+CAT-77 (PROJECT) Medication Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the medication module.
@@ -427,7 +427,7 @@ File: app/services/medication.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-123 (PROJECT) Medication API Endpoints
+CAT-78 (PROJECT) Medication API Endpoints
 
 The Task
 The goal of this task is to expose the medication functionality via FastAPI routes.
@@ -446,7 +446,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-124 (LEARNING) Medication Architecture and Flow
+CAT-79 (LEARNING) Medication Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the medication module.
@@ -468,7 +468,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-125 (PROJECT) Reminder Database Models
+CAT-80 (PROJECT) Reminder Database Models
 
 The Task
 The objective of this task is to define the structure of our reminder data.
@@ -489,7 +489,7 @@ File: app/schemas/reminder.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-126 (PROJECT) Reminder CRUD Layer
+CAT-81 (PROJECT) Reminder CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for reminder.
@@ -507,7 +507,7 @@ File: app/db/crud/reminder.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-127 (PROJECT) Reminder Service Layer
+CAT-82 (PROJECT) Reminder Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the reminder module.
@@ -525,7 +525,7 @@ File: app/services/reminder.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-128 (PROJECT) Reminder API Endpoints
+CAT-83 (PROJECT) Reminder API Endpoints
 
 The Task
 The goal of this task is to expose the reminder functionality via FastAPI routes.
@@ -544,7 +544,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-129 (LEARNING) Reminder Architecture and Flow
+CAT-84 (LEARNING) Reminder Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the reminder module.
@@ -566,7 +566,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-130 (PROJECT) Notification Database Models
+CAT-85 (PROJECT) Notification Database Models
 
 The Task
 The objective of this task is to define the structure of our notification data.
@@ -587,7 +587,7 @@ File: app/schemas/notification.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-131 (PROJECT) Notification CRUD Layer
+CAT-86 (PROJECT) Notification CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for notification.
@@ -605,7 +605,7 @@ File: app/db/crud/notification.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-132 (PROJECT) Notification Service Layer
+CAT-87 (PROJECT) Notification Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the notification module.
@@ -623,7 +623,7 @@ File: app/services/notification.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-133 (PROJECT) Notification API Endpoints
+CAT-88 (PROJECT) Notification API Endpoints
 
 The Task
 The goal of this task is to expose the notification functionality via FastAPI routes.
@@ -642,7 +642,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-134 (LEARNING) Notification Architecture and Flow
+CAT-89 (LEARNING) Notification Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the notification module.
@@ -664,7 +664,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-135 (PROJECT) Exporter Database Models
+CAT-90 (PROJECT) Exporter Database Models
 
 The Task
 The objective of this task is to define the structure of our exporter data.
@@ -685,7 +685,7 @@ File: app/schemas/exporter.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-136 (PROJECT) Exporter CRUD Layer
+CAT-91 (PROJECT) Exporter CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for exporter.
@@ -703,7 +703,7 @@ File: app/db/crud/exporter.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-137 (PROJECT) Exporter Service Layer
+CAT-92 (PROJECT) Exporter Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the exporter module.
@@ -721,7 +721,7 @@ File: app/services/exporter.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-138 (PROJECT) Exporter API Endpoints
+CAT-93 (PROJECT) Exporter API Endpoints
 
 The Task
 The goal of this task is to expose the exporter functionality via FastAPI routes.
@@ -740,7 +740,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-139 (LEARNING) Exporter Architecture and Flow
+CAT-94 (LEARNING) Exporter Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the exporter module.
@@ -762,7 +762,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-140 (PROJECT) Emergency_contact Database Models
+CAT-95 (PROJECT) Emergency_contact Database Models
 
 The Task
 The objective of this task is to define the structure of our emergency_contact data.
@@ -783,7 +783,7 @@ File: app/schemas/emergency_contact.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-141 (PROJECT) Emergency_contact CRUD Layer
+CAT-96 (PROJECT) Emergency_contact CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for emergency_contact.
@@ -801,7 +801,7 @@ File: app/db/crud/emergency_contact.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-142 (PROJECT) Emergency_contact Service Layer
+CAT-97 (PROJECT) Emergency_contact Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the emergency_contact module.
@@ -819,7 +819,7 @@ File: app/services/emergency_contact.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-143 (PROJECT) Emergency_contact API Endpoints
+CAT-98 (PROJECT) Emergency_contact API Endpoints
 
 The Task
 The goal of this task is to expose the emergency_contact functionality via FastAPI routes.
@@ -838,7 +838,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-144 (LEARNING) Emergency_contact Architecture and Flow
+CAT-99 (LEARNING) Emergency_contact Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the emergency_contact module.
@@ -860,7 +860,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-145 (PROJECT) Journal Database Models
+CAT-100 (PROJECT) Journal Database Models
 
 The Task
 The objective of this task is to define the structure of our journal data.
@@ -881,7 +881,7 @@ File: app/schemas/journal.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-146 (PROJECT) Journal CRUD Layer
+CAT-101 (PROJECT) Journal CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for journal.
@@ -899,7 +899,7 @@ File: app/db/crud/journal.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-147 (PROJECT) Journal Service Layer
+CAT-102 (PROJECT) Journal Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the journal module.
@@ -917,7 +917,7 @@ File: app/services/journal.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-148 (PROJECT) Journal API Endpoints
+CAT-103 (PROJECT) Journal API Endpoints
 
 The Task
 The goal of this task is to expose the journal functionality via FastAPI routes.
@@ -936,7 +936,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-149 (LEARNING) Journal Architecture and Flow
+CAT-104 (LEARNING) Journal Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the journal module.
@@ -958,7 +958,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-150 (PROJECT) Habits Database Models
+CAT-105 (PROJECT) Habits Database Models
 
 The Task
 The objective of this task is to define the structure of our habits data.
@@ -979,7 +979,7 @@ File: app/schemas/habits.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-151 (PROJECT) Habits CRUD Layer
+CAT-106 (PROJECT) Habits CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for habits.
@@ -997,7 +997,7 @@ File: app/db/crud/habits.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-152 (PROJECT) Habits Service Layer
+CAT-107 (PROJECT) Habits Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the habits module.
@@ -1015,7 +1015,7 @@ File: app/services/habits.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-153 (PROJECT) Habits API Endpoints
+CAT-108 (PROJECT) Habits API Endpoints
 
 The Task
 The goal of this task is to expose the habits functionality via FastAPI routes.
@@ -1034,7 +1034,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-154 (LEARNING) Habits Architecture and Flow
+CAT-109 (LEARNING) Habits Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the habits module.
@@ -1056,7 +1056,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-155 (PROJECT) Notes Database Models
+CAT-110 (PROJECT) Notes Database Models
 
 The Task
 The objective of this task is to define the structure of our notes data.
@@ -1077,7 +1077,7 @@ File: app/schemas/notes.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-156 (PROJECT) Notes CRUD Layer
+CAT-111 (PROJECT) Notes CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for notes.
@@ -1095,7 +1095,7 @@ File: app/db/crud/notes.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-157 (PROJECT) Notes Service Layer
+CAT-112 (PROJECT) Notes Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the notes module.
@@ -1113,7 +1113,7 @@ File: app/services/notes.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-158 (PROJECT) Notes API Endpoints
+CAT-113 (PROJECT) Notes API Endpoints
 
 The Task
 The goal of this task is to expose the notes functionality via FastAPI routes.
@@ -1132,7 +1132,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-159 (LEARNING) Notes Architecture and Flow
+CAT-114 (LEARNING) Notes Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the notes module.
@@ -1154,7 +1154,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-160 (PROJECT) Media Database Models
+CAT-115 (PROJECT) Media Database Models
 
 The Task
 The objective of this task is to define the structure of our media data.
@@ -1175,7 +1175,7 @@ File: app/schemas/media.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-161 (PROJECT) Media CRUD Layer
+CAT-116 (PROJECT) Media CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for media.
@@ -1193,7 +1193,7 @@ File: app/db/crud/media.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-162 (PROJECT) Media Service Layer
+CAT-117 (PROJECT) Media Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the media module.
@@ -1211,7 +1211,7 @@ File: app/services/media.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-163 (PROJECT) Media API Endpoints
+CAT-118 (PROJECT) Media API Endpoints
 
 The Task
 The goal of this task is to expose the media functionality via FastAPI routes.
@@ -1230,7 +1230,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-164 (LEARNING) Media Architecture and Flow
+CAT-119 (LEARNING) Media Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the media module.
@@ -1252,7 +1252,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-165 (PROJECT) Future Roadmap: Location_tracking Database Models
+CAT-120 (PROJECT) Future Roadmap: Location_tracking Database Models
 
 The Task
 The objective of this task is to define the structure of our location_tracking data.
@@ -1273,7 +1273,7 @@ File: app/schemas/location_tracking.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-166 (PROJECT) Future Roadmap: Location_tracking CRUD Layer
+CAT-121 (PROJECT) Future Roadmap: Location_tracking CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for location_tracking.
@@ -1291,7 +1291,7 @@ File: app/db/crud/location_tracking.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-167 (PROJECT) Future Roadmap: Location_tracking Service Layer
+CAT-122 (PROJECT) Future Roadmap: Location_tracking Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the location_tracking module.
@@ -1309,7 +1309,7 @@ File: app/services/location_tracking.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-168 (PROJECT) Future Roadmap: Location_tracking API Endpoints
+CAT-123 (PROJECT) Future Roadmap: Location_tracking API Endpoints
 
 The Task
 The goal of this task is to expose the location_tracking functionality via FastAPI routes.
@@ -1328,7 +1328,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-169 (LEARNING) Future Roadmap: Location_tracking Architecture and Flow
+CAT-124 (LEARNING) Future Roadmap: Location_tracking Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the location_tracking module.
@@ -1350,7 +1350,7 @@ Technical Implementation Details
 Read FastAPI documentation on dependency injection and Pydantic schemas.
 
 -------------------------------------------------------------------------------------
-CAT-170 (PROJECT) Future Roadmap: Inventory Database Models
+CAT-125 (PROJECT) Future Roadmap: Inventory Database Models
 
 The Task
 The objective of this task is to define the structure of our inventory data.
@@ -1371,7 +1371,7 @@ File: app/schemas/inventory.py.
 Create the Pydantic models.
 
 -------------------------------------------------------------------------------------
-CAT-171 (PROJECT) Future Roadmap: Inventory CRUD Layer
+CAT-126 (PROJECT) Future Roadmap: Inventory CRUD Layer
 
 The Task
 The objective of this task is to implement the direct database interaction layer for inventory.
@@ -1389,7 +1389,7 @@ File: app/db/crud/inventory.py.
 Implement SQLAlchemy queries for the model.
 
 -------------------------------------------------------------------------------------
-CAT-172 (PROJECT) Future Roadmap: Inventory Service Layer
+CAT-127 (PROJECT) Future Roadmap: Inventory Service Layer
 
 The Task
 The objective of this task is to handle the business logic of the inventory module.
@@ -1407,7 +1407,7 @@ File: app/services/inventory.py.
 Implement the service class handling data processing and calling CRUD functions.
 
 -------------------------------------------------------------------------------------
-CAT-173 (PROJECT) Future Roadmap: Inventory API Endpoints
+CAT-128 (PROJECT) Future Roadmap: Inventory API Endpoints
 
 The Task
 The goal of this task is to expose the inventory functionality via FastAPI routes.
@@ -1426,7 +1426,7 @@ Define FastAPI routes using APIRouter.
 Integrate with the Service layer.
 
 -------------------------------------------------------------------------------------
-CAT-174 (LEARNING) Future Roadmap: Inventory Architecture and Flow
+CAT-129 (LEARNING) Future Roadmap: Inventory Architecture and Flow
 
 The Task
 The objective of this task is to understand the complete data flow of the inventory module.
