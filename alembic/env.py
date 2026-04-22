@@ -4,7 +4,8 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from sqlalchemy import pool
 from app.core.settings import settings
 from app.db.base_model import BaseDBModel
-from app.db.models.users import User
+from app.db.base import User
+from app.db.base import Account
 
 from alembic import context
 
@@ -27,6 +28,7 @@ if config.config_file_name is not None:
 
 print("--- ALEMBIC DEBUG ---")
 print(f"Imported User: {User}")
+print(f"Imported Account: {Account}")
 print(f"Tables in Metadata: {BaseDBModel.metadata.tables.keys()}")
 print("----------------------")
 
