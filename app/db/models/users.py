@@ -1,12 +1,13 @@
 import uuid
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
 from sqlalchemy import String, DateTime, ForeignKey
-from sqlalchemy.orm import Mapped, mapped_column, relationship, declarative_base
-
-
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base_model import BaseDBModel
 from app.db.mixins import TimestampMixin
+
+if TYPE_CHECKING:
+	from app.db.models.accounts import Account
 
 
 class User(BaseDBModel, TimestampMixin):
@@ -16,7 +17,11 @@ class User(BaseDBModel, TimestampMixin):
 		default=uuid.uuid4,
 		index=True
 	)
-	name: Mapped[str] = mapped_column(String(255))
+	first_name: Mapped[str] = mapped_column(String(255))
+	last_name: Mapped[str] = mapped_column(String(255))
+	role: Mapped[str] = mapped_column(String(255))
+	account: Mapped[Optional["Account"]] = relationship(back_populates="users")
+	account_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("accounts.id", ondelete="SET NULL"), nullable=True)
 	email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
 	hashed_password: Mapped[str] = mapped_column(String(255))
 	username: Mapped[str] = mapped_column(String(255), unique=True, index=True)
