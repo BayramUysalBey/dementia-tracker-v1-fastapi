@@ -6,9 +6,7 @@ from app.db.base_model import BaseDBModel
 
 if TYPE_CHECKING:
 	from app.db.models.users import User
-
-
-
+	
 class Account(BaseDBModel):
 	__tablename__: str = "accounts"
 	id: Mapped[uuid.UUID] = mapped_column(

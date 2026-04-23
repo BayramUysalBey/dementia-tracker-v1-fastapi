@@ -21,8 +21,6 @@ async def read_user_me(
 ):
     return current_user
 
-
-
 @router.get("/", response_model=List[UserRead])
 async def read_users(
     skip: int = 0, 
