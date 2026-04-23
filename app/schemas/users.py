@@ -1,11 +1,12 @@
 import uuid
 from datetime import datetime
 from pydantic import BaseModel, EmailStr, ConfigDict
+from typing import Literal
 
 class UserBase(BaseModel):
     first_name: str
     last_name: str
-    role: str
+    role: Literal["caregiver", "patient", "family", "doctor"]
     email: EmailStr
     username: str | None = None
     

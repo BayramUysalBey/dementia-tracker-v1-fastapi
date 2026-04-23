@@ -5,10 +5,17 @@ from sqlalchemy import String, DateTime, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base_model import BaseDBModel
 from app.db.mixins import TimestampMixin
+from enum import Enum
 
 if TYPE_CHECKING:
 	from app.db.models.accounts import Account
 
+class UserRole(str, Enum):
+	__tablename__: str = "usersrole"
+	CAREGIVER = "caregiver"
+	PATIENT = "patient"
+	FAMILY = "family"
+	DOCTOR = "doctor"
 
 class User(BaseDBModel, TimestampMixin):
 	__tablename__: str = "users"	
@@ -19,7 +26,7 @@ class User(BaseDBModel, TimestampMixin):
 	)
 	first_name: Mapped[str] = mapped_column(String(255))
 	last_name: Mapped[str] = mapped_column(String(255))
-	role: Mapped[str] = mapped_column(String(255))
+	role: Mapped[UserRole] = mapped_column(String(255))
 	account: Mapped[Optional["Account"]] = relationship(back_populates="users")
 	account_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("accounts.id", ondelete="SET NULL"), nullable=True)
 	email: Mapped[str] = mapped_column(String(255), unique=True, index=True)
