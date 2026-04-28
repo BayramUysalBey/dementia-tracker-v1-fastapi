@@ -65,7 +65,9 @@ async def async_db():
 @pytest.fixture
 def user_mock_data():
     return {
-        "name": "Simple User",
+        "first_name": "Simple",
+        "last_name": "User",
+        "role": "patient",
         "username": "simpleuser",
         "email": "simple@example.com",
         "password": "securepassword123"

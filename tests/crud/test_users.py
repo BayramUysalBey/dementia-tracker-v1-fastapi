@@ -11,11 +11,11 @@ async def test_crud_create_user(async_db: AsyncSession, user_mock_data: dict):
     create_data = user_mock_data.copy()
     create_data.pop("password")
     create_data["hashed_password"] = "crud_hashed_secure"
-    
+    create_data["email"] = "unique_crud@example.com"
     new_user = await req_crud.create(create_data)
     
     assert isinstance(new_user, User)
-    assert new_user.email == user_mock_data["email"]
+    assert new_user.email == "unique_crud@example.com"
     assert new_user.id is not None
     
 @pytest.mark.asyncio
@@ -51,8 +51,8 @@ async def test_crud_update_user(async_db: AsyncSession, user_mock_data: dict):
     create_data["username"] = "update_user"
     new_user = await req_crud.create(create_data)
     
-    update_data = {"name": "Updated Name"}
+    update_data = {"first_name": "Updated Name"}
     updated_user = await req_crud.update(new_user, update_data)
     
-    assert updated_user.name == "Updated Name"
+    assert updated_user.first_name == "Updated Name"
     assert updated_user.id == new_user.id

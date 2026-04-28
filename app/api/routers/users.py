@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, status
 
 from app.schemas.users import UserRead, UserCreate, UserUpdate
 from app.db.models.users import User
-from app.services.users import UserService, get_current_user
+from app.services.users import UserService
+from app.api.deps import get_current_user
 
 router = APIRouter()
 
@@ -16,7 +17,7 @@ async def create_user(
     return await user_service.create_user(user_in)
 
 @router.get("/me", response_model=UserRead)
-async def read_user_me(
+async def read_users_me(
     current_user: User = Depends(get_current_user)
 ):
     return current_user

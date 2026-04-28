@@ -14,8 +14,8 @@ def user_service(async_db: AsyncSession):
 
 @pytest.mark.asyncio
 async def test_service_create_user(user_service: UserService, user_mock_data: dict):
-    user_in = UserCreate(**user_mock_data)
-    
+    user_mock_data["email"] = "unique_service@example.com"
+    user_in = UserCreate(**user_mock_data)  
     user = await user_service.create_user(user_in)
     assert isinstance(user, User)
     assert user.email == user_in.email
@@ -39,7 +39,7 @@ async def test_service_create_user_duplicate_email(user_service: UserService, us
 
 @pytest.mark.asyncio
 async def test_service_update_user_not_found(user_service: UserService):
-    update_data = UserUpdate(name="Test")
+    update_data = UserUpdate(first_name="Test")
     
     with pytest.raises(HTTPException) as exc:
         await user_service.update_user(uuid.uuid4(), update_data)
