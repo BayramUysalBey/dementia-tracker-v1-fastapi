@@ -8,6 +8,7 @@ from app.db.mixins import TimestampMixin
 from enum import Enum
 
 if TYPE_CHECKING:
+	from app.db.models.emergency_contact import EmergencyContact
 	from app.db.models.accounts import Account
 
 class UserRole(str, Enum):
@@ -44,3 +45,6 @@ class User(BaseDBModel, TimestampMixin):
 		"User",
 		back_populates="inviter"
 	)
+	emergency_contacts: Mapped[List["EmergencyContact"]] = relationship(
+       "EmergencyContact", 
+       back_populates="user")
