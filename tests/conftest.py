@@ -72,3 +72,14 @@ def user_mock_data():
         "email": "simple@example.com",
         "password": "securepassword123"
     }
+
+@pytest.fixture
+def emergency_contact_mock_data():
+    return {
+        "first_name": "Jane",
+        "last_name": "Doe",
+        "email": "jane.doe@example.com",
+        "phone_number": "+1234567890",
+        "relation": "Spouse",
+        "is_primary": True
+    }

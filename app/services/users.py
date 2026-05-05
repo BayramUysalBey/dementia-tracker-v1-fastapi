@@ -4,7 +4,7 @@ from string import ascii_lowercase, digits
 from typing import Sequence
 from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import HTTPException, status, Depends, Header
+from fastapi import HTTPException, status, Depends
 from app.db.session import get_db
 
 from app.db.crud.users import UserCRUD

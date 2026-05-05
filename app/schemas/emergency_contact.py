@@ -8,6 +8,7 @@ class EmergencyContactBase(BaseModel):
     email: EmailStr
     phone_number: str
     relation: str
+    is_primary: bool = False
     
 class EmergencyContactCreate(EmergencyContactBase):
     pass
@@ -19,7 +20,7 @@ class EmergencyContactUpdate(BaseModel):
     phone_number: str | None = None
     relation: str | None = None
     
-class UEmergencyContactRead(EmergencyContactBase):
+class EmergencyContactRead(EmergencyContactBase):
     id: uuid.UUID
     user_id: uuid.UUID | None = None
     model_config = ConfigDict(from_attributes=True)
