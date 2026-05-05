@@ -47,4 +47,5 @@ class User(BaseDBModel, TimestampMixin):
 	)
 	emergency_contacts: Mapped[List["EmergencyContact"]] = relationship(
        "EmergencyContact", 
-       back_populates="user")
+       back_populates="user",
+	   cascade="all, delete-orphan")
