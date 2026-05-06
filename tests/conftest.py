@@ -83,3 +83,11 @@ def emergency_contact_mock_data():
         "relation": "Spouse",
         "is_primary": True
     }
+
+@pytest.fixture
+def medication_mock_data():
+    return {
+        "medication_type": "Pill",
+        "medication_name": "Ebixa",
+        "dosage": "10 mg"
+	}

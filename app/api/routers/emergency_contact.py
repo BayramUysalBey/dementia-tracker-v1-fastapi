@@ -1,4 +1,3 @@
-import uuid
 from typing import List
 from fastapi import APIRouter, Depends, status
 from app.schemas.emergency_contact import EmergencyContactCreate, EmergencyContactRead
