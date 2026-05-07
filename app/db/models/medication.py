@@ -7,8 +7,6 @@ from app.db.mixins import TimestampMixin
 from datetime import datetime
 import enum
 from pydantic import Field
-import re
-
 
 if TYPE_CHECKING:
 	from app.db.models.users import User
