@@ -12,8 +12,6 @@ class MedicationCreate(MedicationBase):
     pass
     
 class MedicationUpdate(BaseModel):
-    id: uuid.UUID
-    user_id: uuid.UUID | None = None
     medication_type: MedicationType | None = None
     medication_name: str | None = None
     dosage: str | None = None

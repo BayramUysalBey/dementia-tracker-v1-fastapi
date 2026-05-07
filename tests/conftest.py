@@ -7,10 +7,10 @@ from sqlalchemy import text
 from alembic.config import Config
 from alembic import command
 from httpx import AsyncClient, ASGITransport
-
 from app.main import app
 from app.core.settings import settings
 import app.db.session as db_session_module
+import uuid
 
 TEST_DB_NAME = settings.TEST_DB_NAME
 BASE_URL = settings.DATABASE_URL.rsplit('/', 1)[0] if settings.DATABASE_URL else ""
@@ -64,12 +64,13 @@ async def async_db():
 
 @pytest.fixture
 def user_mock_data():
+    unique_id = str(uuid.uuid4())[:8] 
     return {
         "first_name": "Simple",
         "last_name": "User",
         "role": "patient",
-        "username": "simpleuser",
-        "email": "simple@example.com",
+        "username": f"simpleuser_{unique_id}",
+        "email": f"simple_{unique_id}@example.com",
         "password": "securepassword123"
     }
 
