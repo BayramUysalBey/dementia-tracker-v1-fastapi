@@ -17,8 +17,8 @@ class EmergencyContactsCRUD:
         await self.db.flush()
         return db_object
 
-    async def emergency_contacts_for_user(self, user_id: uuid.UUID) -> Sequence[EmergencyContact]:
-        result = await self.db.execute(select(EmergencyContact).where(EmergencyContact.user_id == user_id))
+    async def emergency_contacts_for_user(self, user_id: uuid.UUID, skip: int = 0, limit: int = 100) -> Sequence[EmergencyContact]:
+        result = await self.db.execute(select(EmergencyContact).where(EmergencyContact.user_id == user_id).offset(skip).limit(limit))
         return result.scalars().all()
 
     async def update_emergency_contacts(self, db_object: EmergencyContact, obj_in: dict) -> EmergencyContact:

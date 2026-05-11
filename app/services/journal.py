@@ -21,17 +21,18 @@ class JournalService:
     async def create_journal(self, create_in: JournalCreate, user_id: uuid.UUID) -> Journal:
         create_data = create_in.model_dump()
         create_data["user_id"] = user_id
-        medication = await self.crud.create_journal(create_data)
-        await self.db.refresh(medication)
-        return medication
+        journal = await self.crud.create_journal(create_data)
+        await self.db.refresh(journal)
+        return journal
         
     async def get_all_journal(self, user_id: uuid.UUID, skip: int = 0, limit: int = 1000) -> Sequence[Journal]:
-        return await self.crud.journal_for_user(user_id=user_id)
-    async def update_journal(self, medication_id: uuid.UUID, user_id: uuid.UUID, user_in: JournalUpdate) -> Journal:
-        db_object = await self.crud.get_journal_by_id(medication_id)
+        return await self.crud.journal_for_user(user_id=user_id, skip=skip, limit=limit)
+    
+    async def update_journal(self, journal_id: uuid.UUID, user_id: uuid.UUID, user_in: JournalUpdate) -> Journal:
+        db_object = await self.crud.get_journal_by_id(journal_id)
         if not db_object or db_object.user_id != user_id:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Journal not found")
         update_data = user_in.model_dump(exclude_unset=True)
-        upload_medication = await self.crud.update_journal(db_object, update_data)
-        await self.db.refresh(upload_medication)
-        return upload_medication
+        updated_journal = await self.crud.update_journal(db_object, update_data)
+        await self.db.refresh(updated_journal)
+        return updated_journal

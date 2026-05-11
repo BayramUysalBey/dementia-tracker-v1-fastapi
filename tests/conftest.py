@@ -92,3 +92,10 @@ def medication_mock_data():
         "medication_name": "Ebixa",
         "dosage": "10 mg"
 	}
+
+@pytest.fixture
+def journal_mock_data():
+    return { 
+		"user_diary_entry": "I didn't forget to cook today",
+		"author_diary_entry": "Her memory is better than yesterday"
+	}

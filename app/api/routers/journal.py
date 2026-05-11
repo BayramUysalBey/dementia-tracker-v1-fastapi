@@ -13,11 +13,11 @@ router = APIRouter()
 
 @router.post("", response_model=JournalRead, status_code=status.HTTP_201_CREATED)
 async def create_journal(
-    contact_in: JournalCreate,
-    contact_service: JournalService = Depends(JournalService),
+    journal_in: JournalCreate,
+    journal_service: JournalService = Depends(JournalService),
     current_user: User = Depends(get_current_user)
     ):
-    return await contact_service.create_journal(contact_in, user_id=current_user.id)
+    return await journal_service.create_journal(journal_in, user_id=current_user.id)
 
 
 @router.get("", response_model=List[JournalRead])
@@ -34,11 +34,11 @@ async def read_journal(
     return list(journals)
 
 
-@router.patch("/{author_id}", response_model=JournalRead, status_code=status.HTTP_200_OK)
+@router.patch("/{journal_id}", response_model=JournalRead, status_code=status.HTTP_200_OK)
 async def update_journal(
-    author_id: uuid.UUID,
+    journal_id: uuid.UUID,
     journal_in: JournalUpdate,
     current_user: User = Depends(get_current_user),
     journal_service: JournalService = Depends(JournalService)
 ):
-    return await journal_service.update_journal(author_id, current_user.id, journal_in)
+    return await journal_service.update_journal(journal_id, current_user.id, journal_in)

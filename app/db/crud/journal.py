@@ -17,8 +17,8 @@ class JournalCRUD:
         await self.db.flush()
         return db_object
 
-    async def journal_for_user(self, user_id: uuid.UUID) -> Sequence[Journal]:
-        result = await self.db.execute(select(Journal).where(Journal.user_id == user_id))
+    async def journal_for_user(self, user_id: uuid.UUID, skip: int = 0, limit: int = 100) -> Sequence[Journal]:
+        result = await self.db.execute(select(Journal).where(Journal.user_id == user_id).offset(skip).limit(limit))
         return result.scalars().all()
 
     async def update_journal(self, db_object: Journal, obj_in: dict) -> Journal:
@@ -32,6 +32,6 @@ class JournalCRUD:
         result = await self.db.execute(select(Journal).offset(skip).limit(limit))
         return result.scalars().all()
     
-    async def get_journal_by_id(self, author_id: uuid.UUID) -> Journal | None:
-        result = await self.db.execute(select(Journal).where(Journal.id == author_id))
+    async def get_journal_by_id(self, journal_id: uuid.UUID) -> Journal | None:
+        result = await self.db.execute(select(Journal).where(Journal.id == journal_id))
         return result.scalars().first()
