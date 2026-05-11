@@ -1,0 +1,42 @@
+Project Architecture / Modules Overview
+
+|-- core_modules/               # System-level foundations
+|   |-- auth/                   # JWT, Session handling
+|   |-- notification/           # Push, SMS, Email dispatches
+|   |-- permissions/            # Access control (who can view what)
+|   `-- exporter/               # PDF/CSV Generation for doctors
+|
+`-- domain_modules/             # Feature-level business logic
+    |
+    |-- account/
+    |   `-- attributes: id, type (pro/personal), billing_status
+    |
+    |-- user/
+    |   `-- attributes: id, account_id, first_name, last_name, role (caregiver, patient, family)
+    |
+    |-- emergency_contact/      
+    |   `-- attributes: id, user_id (patient), name, phone_number, relationship, is_primary (boolean)
+    |
+    |-- medication/
+    |   `-- attributes: id, user_id, medication_type, medication_name, dosage, prescription_date
+    |
+    |-- reminder/               # The central hub for ALL notifications
+    |   `-- attributes: id, user_id, related_entity_id, related_entity_type (e.g., "medication", "appointment"), date, name, type, repeat, check, rate, description
+    |
+    |-- habits/
+    |   `-- attributes: id, user_id, name (e.g., hydration, walking), target_frequency, streak_count
+    |
+    |-- journal/
+    |   `-- attributes: id, user_id (patient), author_id (caregiver doing the logging), date, text, mood, sleep, meals, daily_checks
+    |
+    |-- notes/                  # Ad-hoc grocery lists, questions for doctors
+    |   `-- attributes: id, user_id, author_id, title, content, is_checklist (boolean)
+    |
+    |-- media/
+    |   `-- attributes: id, user_id, journal_id (optional to link to a memory), media_url, name, type (photo, voice memo)
+    |
+    |-- location_tracking/      # Future Roadmap: Wandering prevention
+    |   `-- attributes: id, user_id, latitude, longitude, timestamp
+    |
+    `-- inventory/              # Future Roadmap: Lost-and-found (keys, wallet, glasses)
+        `-- attributes: id, user_id, item_name, usual_location_description, last_seen_date

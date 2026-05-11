@@ -1,0 +1,1450 @@
+Dementia Tracker Project - Auto-Generated Tickets
+===============================================
+
+CAT-56 (PROJECT) Refactor User Model to New Schema
+
+The Task
+Update the existing User model to fit the new architecture.
+
+Behavior: Current vs. Expected
+    • Current Behavior: User model only has name and username.
+    • Expected Behavior: User model has first_name, last_name, role (caregiver, patient, family), and account_id.
+
+Acceptance Requirements:
+Database Model: Update User table to include account_id, first_name, last_name, role.
+Alembic: Create a migration to apply these schema changes.
+Schemas: Update UserCreate, UserUpdate, UserRead Pydantic schemas.
+
+Technical Implementation Details
+Run `alembic revision --autogenerate -m 'update_user_schema'`.
+Modify app/db/models/users.py.
+Modify app/schemas/users.py.
+
+-------------------------------------------------------------------------------------
+CAT-57 (PROJECT) Refactor User CRUD and Service Layers
+
+The Task
+Update the User CRUD and Service layers to handle the new schema fields.
+
+Behavior: Current vs. Expected
+    • Current Behavior: CRUD and Service layers handle old User fields.
+    • Expected Behavior: CRUD and Service layers correctly map and process first_name, last_name, role, and account_id.
+
+Acceptance Requirements:
+Update user creation logic to require first_name, last_name, and role.
+Ensure account_id is properly linked or validated during user creation.
+
+Technical Implementation Details
+Modify app/db/crud/users.py and app/services/users.py to handle the new Pydantic schema fields.
+
+-------------------------------------------------------------------------------------
+CAT-58 (PROJECT) Refactor User API Endpoints
+
+The Task
+Update the User API endpoints to reflect new schema changes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: API routes expect the old User schema.
+    • Expected Behavior: API routes accept and return the new User schema (first_name, last_name, role, account_id).
+
+Acceptance Requirements:
+Update POST /users/create, GET /users/me, and PATCH /users/me to use updated schemas.
+
+Technical Implementation Details
+Modify app/api/routers/users.py to ensure the updated Pydantic models are used for request validation and response serialization.
+
+-------------------------------------------------------------------------------------
+CAT-59 (LEARNING) Understanding Schema Refactoring and Migrations
+
+The Task
+Learn how to safely modify an existing database schema and propagate changes through the architecture.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with creating new tables, but unsure about modifying existing ones.
+    • Expected Behavior: Able to explain how Alembic handles schema updates and how to update a full Clean Architecture flow safely.
+
+Acceptance Requirements:
+Learning phase:
+Understand the impact of schema changes on existing data.
+Learn how to write data migrations in Alembic.
+
+Interview preparing phase:
+How does Alembic track changes to existing columns?
+What happens to existing records if we add a new non-nullable column?
+
+Technical Implementation Details
+Read Alembic documentation on autogenerate and data migrations.
+
+-------------------------------------------------------------------------------------
+CAT-60 (PROJECT) Account Database Models
+
+The Task
+The objective of this task is to define the structure of our account data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for account.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for account containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Account table created with fields: id, type (pro/personal), billing_status.
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for AccountCreate, AccountUpdate, and AccountRead.
+
+Technical Implementation Details
+File: app/db/models/account.py.
+Create the SQLAlchemy model.
+File: app/schemas/account.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-61 (PROJECT) Account CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for account.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for account.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for account in the database.
+
+Acceptance Requirements:
+Implementation: Create a AccountCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/account.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-62 (PROJECT) Account Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the account module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for account.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding account are enforced here.
+
+Technical Implementation Details
+File: app/services/account.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-63 (PROJECT) Account API Endpoints
+
+The Task
+The goal of this task is to expose the account functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for account.
+    • Expected Behavior: Functional routes are available to interact with account via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/account.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-64 (LEARNING) Account Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the account module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for account, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for account.
+
+Acceptance Requirements:
+Learning phase:
+Research how account relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the account CRUD layer?
+Why do we separate the account schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-65 (PROJECT) Auth Database Models
+
+The Task
+The objective of this task is to define the structure of our auth data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for auth.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for auth containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Auth table created with fields: JWT handling, session tables.
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for AuthCreate, AuthUpdate, and AuthRead.
+
+Technical Implementation Details
+File: app/db/models/auth.py.
+Create the SQLAlchemy model.
+File: app/schemas/auth.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-66 (PROJECT) Auth CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for auth.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for auth.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for auth in the database.
+
+Acceptance Requirements:
+Implementation: Create a AuthCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/auth.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-67 (PROJECT) Auth Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the auth module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for auth.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding auth are enforced here.
+
+Technical Implementation Details
+File: app/services/auth.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-68 (PROJECT) Auth API Endpoints
+
+The Task
+The goal of this task is to expose the auth functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for auth.
+    • Expected Behavior: Functional routes are available to interact with auth via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/auth.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-69 (LEARNING) Auth Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the auth module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for auth, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for auth.
+
+Acceptance Requirements:
+Learning phase:
+Research how auth relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the auth CRUD layer?
+Why do we separate the auth schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-70 (PROJECT) Permissions Database Models
+
+The Task
+The objective of this task is to define the structure of our permissions data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for permissions.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for permissions containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Permissions table created with fields: Access control models.
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for PermissionsCreate, PermissionsUpdate, and PermissionsRead.
+
+Technical Implementation Details
+File: app/db/models/permissions.py.
+Create the SQLAlchemy model.
+File: app/schemas/permissions.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-71 (PROJECT) Permissions CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for permissions.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for permissions.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for permissions in the database.
+
+Acceptance Requirements:
+Implementation: Create a PermissionsCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/permissions.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-72 (PROJECT) Permissions Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the permissions module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for permissions.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding permissions are enforced here.
+
+Technical Implementation Details
+File: app/services/permissions.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-73 (PROJECT) Permissions API Endpoints
+
+The Task
+The goal of this task is to expose the permissions functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for permissions.
+    • Expected Behavior: Functional routes are available to interact with permissions via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/permissions.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-74 (LEARNING) Permissions Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the permissions module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for permissions, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for permissions.
+
+Acceptance Requirements:
+Learning phase:
+Research how permissions relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the permissions CRUD layer?
+Why do we separate the permissions schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-75 (PROJECT) Medication Database Models
+
+The Task
+The objective of this task is to define the structure of our medication data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for medication.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for medication containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Medication table created with fields: id, user_id, medication_type, medication_name, dosage, prescription_date.
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for MedicationCreate, MedicationUpdate, and MedicationRead.
+
+Technical Implementation Details
+File: app/db/models/medication.py.
+Create the SQLAlchemy model.
+File: app/schemas/medication.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-76 (PROJECT) Medication CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for medication.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for medication.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for medication in the database.
+
+Acceptance Requirements:
+Implementation: Create a MedicationCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/medication.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-77 (PROJECT) Medication Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the medication module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for medication.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding medication are enforced here.
+
+Technical Implementation Details
+File: app/services/medication.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-78 (PROJECT) Medication API Endpoints
+
+The Task
+The goal of this task is to expose the medication functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for medication.
+    • Expected Behavior: Functional routes are available to interact with medication via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/medication.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-79 (LEARNING) Medication Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the medication module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for medication, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for medication.
+
+Acceptance Requirements:
+Learning phase:
+Research how medication relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the medication CRUD layer?
+Why do we separate the medication schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-80 (PROJECT) Reminder Database Models
+
+The Task
+The objective of this task is to define the structure of our reminder data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for reminder.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for reminder containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Reminder table created with fields: id, user_id, related_entity_id, related_entity_type, date, name, type, repeat, check, rate, description.
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for ReminderCreate, ReminderUpdate, and ReminderRead.
+
+Technical Implementation Details
+File: app/db/models/reminder.py.
+Create the SQLAlchemy model.
+File: app/schemas/reminder.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-81 (PROJECT) Reminder CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for reminder.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for reminder.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for reminder in the database.
+
+Acceptance Requirements:
+Implementation: Create a ReminderCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/reminder.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-82 (PROJECT) Reminder Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the reminder module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for reminder.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding reminder are enforced here.
+
+Technical Implementation Details
+File: app/services/reminder.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-83 (PROJECT) Reminder API Endpoints
+
+The Task
+The goal of this task is to expose the reminder functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for reminder.
+    • Expected Behavior: Functional routes are available to interact with reminder via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/reminder.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-84 (LEARNING) Reminder Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the reminder module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for reminder, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for reminder.
+
+Acceptance Requirements:
+Learning phase:
+Research how reminder relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the reminder CRUD layer?
+Why do we separate the reminder schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-85 (PROJECT) Notification Database Models
+
+The Task
+The objective of this task is to define the structure of our notification data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for notification.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for notification containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Notification table created with fields: Push, SMS, Email dispatches.
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for NotificationCreate, NotificationUpdate, and NotificationRead.
+
+Technical Implementation Details
+File: app/db/models/notification.py.
+Create the SQLAlchemy model.
+File: app/schemas/notification.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-86 (PROJECT) Notification CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for notification.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for notification.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for notification in the database.
+
+Acceptance Requirements:
+Implementation: Create a NotificationCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/notification.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-87 (PROJECT) Notification Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the notification module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for notification.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding notification are enforced here.
+
+Technical Implementation Details
+File: app/services/notification.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-88 (PROJECT) Notification API Endpoints
+
+The Task
+The goal of this task is to expose the notification functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for notification.
+    • Expected Behavior: Functional routes are available to interact with notification via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/notification.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-89 (LEARNING) Notification Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the notification module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for notification, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for notification.
+
+Acceptance Requirements:
+Learning phase:
+Research how notification relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the notification CRUD layer?
+Why do we separate the notification schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-90 (PROJECT) Exporter Database Models
+
+The Task
+The objective of this task is to define the structure of our exporter data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for exporter.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for exporter containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Exporter table created with fields: PDF/CSV Generation logs.
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for ExporterCreate, ExporterUpdate, and ExporterRead.
+
+Technical Implementation Details
+File: app/db/models/exporter.py.
+Create the SQLAlchemy model.
+File: app/schemas/exporter.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-91 (PROJECT) Exporter CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for exporter.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for exporter.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for exporter in the database.
+
+Acceptance Requirements:
+Implementation: Create a ExporterCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/exporter.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-92 (PROJECT) Exporter Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the exporter module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for exporter.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding exporter are enforced here.
+
+Technical Implementation Details
+File: app/services/exporter.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-93 (PROJECT) Exporter API Endpoints
+
+The Task
+The goal of this task is to expose the exporter functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for exporter.
+    • Expected Behavior: Functional routes are available to interact with exporter via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/exporter.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-94 (LEARNING) Exporter Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the exporter module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for exporter, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for exporter.
+
+Acceptance Requirements:
+Learning phase:
+Research how exporter relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the exporter CRUD layer?
+Why do we separate the exporter schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-95 (PROJECT) Emergency_contact Database Models
+
+The Task
+The objective of this task is to define the structure of our emergency_contact data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for emergency_contact.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for emergency_contact containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Emergency_contact table created with fields: id, user_id (patient), name, phone_number, relationship, is_primary (boolean).
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for Emergency_contactCreate, Emergency_contactUpdate, and Emergency_contactRead.
+
+Technical Implementation Details
+File: app/db/models/emergency_contact.py.
+Create the SQLAlchemy model.
+File: app/schemas/emergency_contact.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-96 (PROJECT) Emergency_contact CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for emergency_contact.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for emergency_contact.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for emergency_contact in the database.
+
+Acceptance Requirements:
+Implementation: Create a Emergency_contactCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/emergency_contact.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-97 (PROJECT) Emergency_contact Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the emergency_contact module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for emergency_contact.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding emergency_contact are enforced here.
+
+Technical Implementation Details
+File: app/services/emergency_contact.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-98 (PROJECT) Emergency_contact API Endpoints
+
+The Task
+The goal of this task is to expose the emergency_contact functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for emergency_contact.
+    • Expected Behavior: Functional routes are available to interact with emergency_contact via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/emergency_contact.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-99 (LEARNING) Emergency_contact Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the emergency_contact module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for emergency_contact, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for emergency_contact.
+
+Acceptance Requirements:
+Learning phase:
+Research how emergency_contact relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the emergency_contact CRUD layer?
+Why do we separate the emergency_contact schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-100 (PROJECT) Journal Database Models
+
+The Task
+The objective of this task is to define the structure of our journal data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for journal.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for journal containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Journal table created with fields: id, user_id (patient), author_id (caregiver), date, text, mood, sleep, meals, daily_checks.
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for JournalCreate, JournalUpdate, and JournalRead.
+
+Technical Implementation Details
+File: app/db/models/journal.py.
+Create the SQLAlchemy model.
+File: app/schemas/journal.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-101 (PROJECT) Journal CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for journal.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for journal.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for journal in the database.
+
+Acceptance Requirements:
+Implementation: Create a JournalCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/journal.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-102 (PROJECT) Journal Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the journal module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for journal.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding journal are enforced here.
+
+Technical Implementation Details
+File: app/services/journal.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-103 (PROJECT) Journal API Endpoints
+
+The Task
+The goal of this task is to expose the journal functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for journal.
+    • Expected Behavior: Functional routes are available to interact with journal via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/journal.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-104 (LEARNING) Journal Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the journal module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for journal, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for journal.
+
+Acceptance Requirements:
+Learning phase:
+Research how journal relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the journal CRUD layer?
+Why do we separate the journal schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-105 (PROJECT) Habits Database Models
+
+The Task
+The objective of this task is to define the structure of our habits data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for habits.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for habits containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Habits table created with fields: id, user_id, name, target_frequency, streak_count.
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for HabitsCreate, HabitsUpdate, and HabitsRead.
+
+Technical Implementation Details
+File: app/db/models/habits.py.
+Create the SQLAlchemy model.
+File: app/schemas/habits.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-106 (PROJECT) Habits CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for habits.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for habits.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for habits in the database.
+
+Acceptance Requirements:
+Implementation: Create a HabitsCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/habits.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-107 (PROJECT) Habits Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the habits module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for habits.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding habits are enforced here.
+
+Technical Implementation Details
+File: app/services/habits.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-108 (PROJECT) Habits API Endpoints
+
+The Task
+The goal of this task is to expose the habits functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for habits.
+    • Expected Behavior: Functional routes are available to interact with habits via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/habits.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-109 (LEARNING) Habits Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the habits module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for habits, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for habits.
+
+Acceptance Requirements:
+Learning phase:
+Research how habits relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the habits CRUD layer?
+Why do we separate the habits schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-110 (PROJECT) Notes Database Models
+
+The Task
+The objective of this task is to define the structure of our notes data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for notes.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for notes containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Notes table created with fields: id, user_id, author_id, title, content, is_checklist (boolean).
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for NotesCreate, NotesUpdate, and NotesRead.
+
+Technical Implementation Details
+File: app/db/models/notes.py.
+Create the SQLAlchemy model.
+File: app/schemas/notes.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-111 (PROJECT) Notes CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for notes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for notes.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for notes in the database.
+
+Acceptance Requirements:
+Implementation: Create a NotesCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/notes.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-112 (PROJECT) Notes Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the notes module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for notes.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding notes are enforced here.
+
+Technical Implementation Details
+File: app/services/notes.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-113 (PROJECT) Notes API Endpoints
+
+The Task
+The goal of this task is to expose the notes functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for notes.
+    • Expected Behavior: Functional routes are available to interact with notes via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/notes.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-114 (LEARNING) Notes Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the notes module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for notes, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for notes.
+
+Acceptance Requirements:
+Learning phase:
+Research how notes relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the notes CRUD layer?
+Why do we separate the notes schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-115 (PROJECT) Media Database Models
+
+The Task
+The objective of this task is to define the structure of our media data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for media.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for media containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Media table created with fields: id, user_id, journal_id, media_url, name, type (photo, voice memo).
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for MediaCreate, MediaUpdate, and MediaRead.
+
+Technical Implementation Details
+File: app/db/models/media.py.
+Create the SQLAlchemy model.
+File: app/schemas/media.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-116 (PROJECT) Media CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for media.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for media.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for media in the database.
+
+Acceptance Requirements:
+Implementation: Create a MediaCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/media.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-117 (PROJECT) Media Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the media module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for media.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding media are enforced here.
+
+Technical Implementation Details
+File: app/services/media.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-118 (PROJECT) Media API Endpoints
+
+The Task
+The goal of this task is to expose the media functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for media.
+    • Expected Behavior: Functional routes are available to interact with media via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/media.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-119 (LEARNING) Media Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the media module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for media, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for media.
+
+Acceptance Requirements:
+Learning phase:
+Research how media relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the media CRUD layer?
+Why do we separate the media schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-120 (PROJECT) Future Roadmap: Location_tracking Database Models
+
+The Task
+The objective of this task is to define the structure of our location_tracking data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for location_tracking.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for location_tracking containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Location_tracking table created with fields: id, user_id, latitude, longitude, timestamp.
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for Location_trackingCreate, Location_trackingUpdate, and Location_trackingRead.
+
+Technical Implementation Details
+File: app/db/models/location_tracking.py.
+Create the SQLAlchemy model.
+File: app/schemas/location_tracking.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-121 (PROJECT) Future Roadmap: Location_tracking CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for location_tracking.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for location_tracking.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for location_tracking in the database.
+
+Acceptance Requirements:
+Implementation: Create a Location_trackingCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/location_tracking.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-122 (PROJECT) Future Roadmap: Location_tracking Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the location_tracking module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for location_tracking.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding location_tracking are enforced here.
+
+Technical Implementation Details
+File: app/services/location_tracking.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-123 (PROJECT) Future Roadmap: Location_tracking API Endpoints
+
+The Task
+The goal of this task is to expose the location_tracking functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for location_tracking.
+    • Expected Behavior: Functional routes are available to interact with location_tracking via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/location_tracking.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-124 (LEARNING) Future Roadmap: Location_tracking Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the location_tracking module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for location_tracking, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for location_tracking.
+
+Acceptance Requirements:
+Learning phase:
+Research how location_tracking relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the location_tracking CRUD layer?
+Why do we separate the location_tracking schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------
+CAT-125 (PROJECT) Future Roadmap: Inventory Database Models
+
+The Task
+The objective of this task is to define the structure of our inventory data.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have database models for inventory.
+    • Expected Behavior: A fully functional SQLAlchemy model is created for inventory containing the required fields.
+
+Acceptance Requirements:
+Database Model: A Inventory table created with fields: id, user_id, item_name, usual_location_description, last_seen_date.
+Reusable Mixin: Use the timestamp mixin for created_at and updated_at.
+Pydantic Schemas: Create schemas for InventoryCreate, InventoryUpdate, and InventoryRead.
+
+Technical Implementation Details
+File: app/db/models/inventory.py.
+Create the SQLAlchemy model.
+File: app/schemas/inventory.py.
+Create the Pydantic models.
+
+-------------------------------------------------------------------------------------
+CAT-126 (PROJECT) Future Roadmap: Inventory CRUD Layer
+
+The Task
+The objective of this task is to implement the direct database interaction layer for inventory.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There are no CRUD operations for inventory.
+    • Expected Behavior: The system can perform create, read, update, and delete operations for inventory in the database.
+
+Acceptance Requirements:
+Implementation: Create a InventoryCRUD class or functions that perform basic operations: create, get_by_id, list_all, update, delete.
+Constraint: Do not include any business logic here. This layer should only focus on executing SQLAlchemy queries.
+
+Technical Implementation Details
+File: app/db/crud/inventory.py.
+Implement SQLAlchemy queries for the model.
+
+-------------------------------------------------------------------------------------
+CAT-127 (PROJECT) Future Roadmap: Inventory Service Layer
+
+The Task
+The objective of this task is to handle the business logic of the inventory module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: There is no business logic layer for inventory.
+    • Expected Behavior: The Service layer correctly handles any domain logic and calls the CRUD layer.
+
+Acceptance Requirements:
+Integration: The Service layer should call the functions from the CRUD layer to save or retrieve data.
+Logic Separation: Ensure any necessary business rules regarding inventory are enforced here.
+
+Technical Implementation Details
+File: app/services/inventory.py.
+Implement the service class handling data processing and calling CRUD functions.
+
+-------------------------------------------------------------------------------------
+CAT-128 (PROJECT) Future Roadmap: Inventory API Endpoints
+
+The Task
+The goal of this task is to expose the inventory functionality via FastAPI routes.
+
+Behavior: Current vs. Expected
+    • Current Behavior: The system does not have API endpoints for inventory.
+    • Expected Behavior: Functional routes are available to interact with inventory via REST API.
+
+Acceptance Requirements:
+Dependency: Use the appropriate dependency for database sessions and authentication.
+Endpoints: Implement POST, GET, PATCH, and DELETE endpoints as needed.
+
+Technical Implementation Details
+File: app/api/routers/inventory.py.
+Define FastAPI routes using APIRouter.
+Integrate with the Service layer.
+
+-------------------------------------------------------------------------------------
+CAT-129 (LEARNING) Future Roadmap: Inventory Architecture and Flow
+
+The Task
+The objective of this task is to understand the complete data flow of the inventory module.
+
+Behavior: Current vs. Expected
+    • Current Behavior: Familiar with writing code for inventory, but need deeper architectural understanding.
+    • Expected Behavior: Ability to explain the complete flow from Endpoints to Service to CRUD to Database for inventory.
+
+Acceptance Requirements:
+Learning phase:
+Research how inventory relates to other modules in the system.
+Understand the specific business rules enforced in the Service layer.
+
+Interview preparing phase:
+What is the single responsibility of the inventory CRUD layer?
+Why do we separate the inventory schemas from the SQLAlchemy models?
+
+Technical Implementation Details
+Read FastAPI documentation on dependency injection and Pydantic schemas.
+
+-------------------------------------------------------------------------------------

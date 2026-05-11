@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-	name="dementia-tracker-v2",
-	version="2.0",
+	name="dementia-tracker-v1",
+	version="1.0",
 	packages=find_packages()
 )
