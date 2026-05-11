@@ -25,4 +25,4 @@ class EmergencyContactCService:
         return contact
     
     async def get_all_emergency_contact(self, user_id: uuid.UUID, skip: int = 0, limit: int = 1000) -> Sequence[EmergencyContact]:
-        return await self.crud.emergency_contacts_for_user(user_id=user_id)
+        return await self.crud.emergency_contacts_for_user(user_id=user_id, skip=skip, limit=limit)

@@ -1,25 +1,23 @@
 import uuid
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict
 from datetime import datetime
-from app.db.models.journal import Journal
 
 class JournalBase(BaseModel):  
-    user_diary_entry: Journal | None = None
-    author_diary_entry: Journal | None = None
+    user_diary_entry: str | None = None
+    author_diary_entry: str | None = None
     
 class JournalCreate(JournalBase):
-    pass
+    user_id: uuid.UUID
     
-class JournalUpdate(BaseModel):
-    user_diary_entry: Journal | None = None
-    author_diary_entry: Journal | None = None
+class JournalUpdate(JournalBase):
+    pass
     
 class JournalRead(JournalBase):
     id: uuid.UUID
-    user_id: uuid.UUID | None = None
+    user_id: uuid.UUID
     author_id: uuid.UUID | None = None
-    user_diary_entry: Journal | None = None
-    author_diary_entry: Journal | None = None
+    created_at: datetime
+    updated_at: datetime
     model_config = ConfigDict(from_attributes=True)
     
 

@@ -17,8 +17,8 @@ class MedicationCRUD:
         await self.db.flush()
         return db_object
 
-    async def medication_for_user(self, user_id: uuid.UUID) -> Sequence[Medication]:
-        result = await self.db.execute(select(Medication).where(Medication.user_id == user_id))
+    async def medication_for_user(self, user_id: uuid.UUID, skip: int = 0, limit: int = 100) -> Sequence[Medication]:
+        result = await self.db.execute(select(Medication).where(Medication.user_id == user_id).offset(skip).limit(limit))
         return result.scalars().all()
 
     async def update_medication(self, db_object: Medication, obj_in: dict) -> Medication:

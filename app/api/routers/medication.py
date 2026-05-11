@@ -13,11 +13,11 @@ router = APIRouter()
 
 @router.post("", response_model=MedicationRead, status_code=status.HTTP_201_CREATED)
 async def create_medication(
-    contact_in: MedicationCreate,
-    contact_service: MedicationService = Depends(MedicationService),
+    medication_in: MedicationCreate,
+    medication_service: MedicationService = Depends(MedicationService),
     current_user: User = Depends(get_current_user)
     ):
-    return await contact_service.create_medication(contact_in, user_id=current_user.id)
+    return await medication_service.create_medication(medication_in, user_id=current_user.id)
 
 
 @router.get("", response_model=List[MedicationRead])
