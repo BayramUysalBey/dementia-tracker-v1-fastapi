@@ -208,4 +208,5 @@ __marimo__/
 
 .idea/
 **/docs/
-**/.postman/
+postman/
+**/postman/
