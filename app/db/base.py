@@ -5,3 +5,4 @@ from app.db.models.users import UserRole
 from app.db.models.emergency_contact import EmergencyContact
 from app.db.models.medication import Medication
 from app.db.models.journal import Journal
+from app.db.models.reminder import Reminder
