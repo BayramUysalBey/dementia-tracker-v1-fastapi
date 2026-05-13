@@ -84,29 +84,3 @@ def emergency_contact_mock_data():
         "relation": "Spouse",
         "is_primary": True
     }
-
-@pytest.fixture
-def medication_mock_data():
-    return {
-        "medication_type": "Pill",
-        "medication_name": "Ebixa",
-        "dosage": "10 mg"
-	}
-
-@pytest.fixture
-def journal_mock_data():
-    return { 
-		"user_diary_entry": "I didn't forget to cook today",
-		"author_diary_entry": "Her memory is better than yesterday"
-	}
-
-@pytest.fixture
-def reminder_mock_data():
-    return {
-    "related_entity_id": str(uuid.uuid4()),      
-    "related_entity_type": "medication",
-    "name": "Take sleeping pill",
-    "repeat": "daily",
-    "type": "push",
-    "check": "pending"
-	}
