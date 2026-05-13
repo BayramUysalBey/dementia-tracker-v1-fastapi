@@ -10,6 +10,8 @@ from enum import Enum
 if TYPE_CHECKING:
 	from app.db.models.emergency_contact import EmergencyContact
 	from app.db.models.accounts import Account
+	from app.db.models.medication import Medication
+	from app.db.models.journal import Journal
 
 class UserRole(str, Enum):
 	__tablename__: str = "usersrole"
@@ -35,7 +37,6 @@ class User(BaseDBModel, TimestampMixin):
 	username: Mapped[str] = mapped_column(String(255), unique=True, index=True)
 	last_login: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
 	invited_by: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-
 	inviter: Mapped[Optional["User"]] = relationship(
 		"User",
 		remote_side=[id],
