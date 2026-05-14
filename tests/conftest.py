@@ -111,12 +111,3 @@ def reminder_mock_data():
     "type": "push",
     "check": "pending"
 	}
-
-@pytest.fixture
-def media_mock_data():
-    return {
-    "user_id": str(uuid.uuid4()),
-    "type": MediaType.PHOTO.value, # or "photo"
-    "media_url": "mock_media.jpg",
-    "name": "This is your memories"
-	}
