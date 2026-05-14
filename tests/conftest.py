@@ -10,6 +10,7 @@ from httpx import AsyncClient, ASGITransport
 from app.main import app
 from app.core.settings import settings
 import app.db.session as db_session_module
+from app.db.models.media import MediaType
 import uuid
 
 TEST_DB_NAME = settings.TEST_DB_NAME
@@ -109,4 +110,13 @@ def reminder_mock_data():
     "repeat": "daily",
     "type": "push",
     "check": "pending"
+	}
+
+@pytest.fixture
+def media_mock_data():
+    return {
+    "user_id": str(uuid.uuid4()),
+    "type": MediaType.PHOTO.value, # or "photo"
+    "media_url": "mock_media.jpg",
+    "name": "This is your memories"
 	}
