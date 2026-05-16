@@ -11,6 +11,24 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    
+    # 1. Spin up a temporary Postgres Database just for this test run!
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: test_user
+          POSTGRES_PASSWORD: test_password
+          POSTGRES_DB: default_db
+        ports:
+          - 5432:5432
+        # Wait for the database to be ready before starting tests
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -25,6 +43,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      # 2. Provide the environment variables to the Pytest step
       - name: Run Pytest
+        env:
+          DATABASE_URL: "postgresql+asyncpg://test_user:test_password@localhost:5432/default_db"
+          TEST_DB_NAME: "dementia_tracker_test_db"
+          SECRET_KEY: "super_secret_test_key"
         run: |
           pytest
