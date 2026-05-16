@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+      - CAT-65-The-Media-Module
   pull_request:
     branches:
       - main
+
 
 jobs:
   test:
