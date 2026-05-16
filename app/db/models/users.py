@@ -50,3 +50,20 @@ class User(BaseDBModel, TimestampMixin):
        "EmergencyContact", 
        back_populates="user",
 	   cascade="all, delete-orphan")
+	medications: Mapped[List["Medication"]] = relationship(
+		"Medication",
+		back_populates="user",
+		cascade="all, delete-orphan"
+	)
+	journals_as_patient: Mapped[List["Journal"]] = relationship(
+		"Journal",
+		foreign_keys="[Journal.user_id]",
+		back_populates="user",
+		cascade="all, delete-orphan"
+	)
+	journals_as_author: Mapped[List["Journal"]] = relationship(
+		"Journal",
+		foreign_keys="[Journal.author_id]",
+		back_populates="author",
+		cascade="all, delete-orphan"
+	)
