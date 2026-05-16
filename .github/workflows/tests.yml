@@ -52,5 +52,6 @@ jobs:
           DATABASE_URL: "postgresql+asyncpg://test_user:test_password@localhost:5432/postgres"
           TEST_DB_NAME: "dementia_tracker_test_db"
           SECRET_KEY: "super_secret_test_key"
+          PYTHONPATH: .
         run: |
-          pytest
+          python -m pytest # <--- The safest way to run pytest in CI
