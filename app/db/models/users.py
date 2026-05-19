@@ -12,6 +12,11 @@ if TYPE_CHECKING:
 	from app.db.models.accounts import Account
 	from app.db.models.medication import Medication
 	from app.db.models.journal import Journal
+	from app.db.models.habit import Habit
+	from app.db.models.note import Note
+	from app.db.models.media import Media
+	
+
 
 class UserRole(str, Enum):
 	__tablename__: str = "usersrole"
@@ -50,3 +55,10 @@ class User(BaseDBModel, TimestampMixin):
        "EmergencyContact", 
        back_populates="user",
 	   cascade="all, delete-orphan")
+	
+	notes_as_author: Mapped[List["Note"]] = relationship("Note", foreign_keys="[Note.author_id]", back_populates="author")
+	notes: Mapped[List["Note"]] = relationship("Note", foreign_keys="[Note.user_id]", back_populates="user")
+	habits: Mapped[List["Habit"]] = relationship("Habit", back_populates="user")
+	medications: Mapped[List["Medication"]] = relationship("Medication", back_populates="user")
+	journals_as_patient: Mapped[List["Journal"]] = relationship("Journal", foreign_keys="[Journal.user_id]", back_populates="user")
+	journals_as_author: Mapped[List["Journal"]] = relationship("Journal", foreign_keys="[Journal.author_id]", back_populates="author")

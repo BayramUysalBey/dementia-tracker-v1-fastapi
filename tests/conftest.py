@@ -10,8 +10,11 @@ from httpx import AsyncClient, ASGITransport
 from app.main import app
 from app.core.settings import settings
 import app.db.session as db_session_module
-from app.db.models.media import MediaType
 import uuid
+from app.api.deps import get_current_user
+from app.db.models.users import User
+from datetime import datetime, timezone
+
 
 TEST_DB_NAME = settings.TEST_DB_NAME
 BASE_URL = settings.DATABASE_URL.rsplit('/', 1)[0] if settings.DATABASE_URL else ""
@@ -111,3 +114,40 @@ def reminder_mock_data():
     "type": "push",
     "check": "pending"
 	}
+
+@pytest.fixture
+def habit_mock_data():
+    return {
+		"name": "Mom book",
+        "target_frequency": "Daily",
+        "streak_count": 3
+	}
+
+@pytest.fixture
+def note_mock_data():
+    
+        return {
+        "title": "Daily Process",
+        "content": "Cooking meal plan",
+        "category": "Mood",
+        "type": "Syndrome",
+        "is_checklist": True
+    }
+
+
+@pytest_asyncio.fixture
+async def authenticated_client(client: AsyncClient):
+    dummy_user = User(
+        id=uuid.uuid4(), 
+        username="testuser",
+        email="test@example.com",
+        first_name="Test",
+        last_name="User",
+        role="patient",
+        created_at=datetime.now(timezone.utc),
+        updated_at=datetime.now(timezone.utc)
+    )
+    app.dependency_overrides[get_current_user] = lambda: dummy_user
+    yield client
+    app.dependency_overrides.clear()
+
