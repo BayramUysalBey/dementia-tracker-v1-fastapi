@@ -7,3 +7,5 @@ from app.db.models.medication import Medication
 from app.db.models.journal import Journal
 from app.db.models.reminder import Reminder
 from app.db.models.media import Media
+from app.db.models.habit import Habit
+from app.db.models.note import Note

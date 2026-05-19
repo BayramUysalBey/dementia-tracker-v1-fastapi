@@ -1,13 +1,11 @@
 import pytest
 from httpx import AsyncClient
-import uuid
 import io # fake file creator
 
 @pytest.mark.asyncio
 async def test_create_and_read_media(
     client: AsyncClient,
-    user_mock_data: dict, 
-    media_mock_data: dict
+    user_mock_data: dict
 ):
     # 1. Create a user and get token
     response_create = await client.post("/api/v1/users/create", json=user_mock_data)

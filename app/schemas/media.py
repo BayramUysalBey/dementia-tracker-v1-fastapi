@@ -1,6 +1,5 @@
 import uuid
 from pydantic import BaseModel, ConfigDict
-from datetime import datetime
 from app.db.models.media import MediaType
 
 class MediaBase(BaseModel):  
@@ -12,7 +11,6 @@ class MediaBase(BaseModel):
 class MediaCreate(MediaBase):
     file: str | None = None
     name: str | None = None
-    type: MediaType | None = None
     type: MediaType | None = None
     
     

@@ -32,6 +32,6 @@ class MediaCRUD:
         result = await self.db.execute(select(Media).offset(skip).limit(limit))
         return result.scalars().all()
     
-    async def get_media_by_id(self, reminder_id: uuid.UUID) -> Media | None:
-        result = await self.db.execute(select(Media).where(Media.id == reminder_id))
+    async def get_media_by_id(self, media_id: uuid.UUID) -> Media | None:
+        result = await self.db.execute(select(Media).where(Media.id == media_id))
         return result.scalars().first()
