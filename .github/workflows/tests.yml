@@ -11,6 +11,28 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    
+    # Spin up a temporary PostgreSQL database for the tests
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: postgresql+asyncpg://postgres:password@localhost:5432/postgres
+      TEST_DB_NAME: test_db
+      SECRET_KEY: super-secret-test-key-for-github-actions
+
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
