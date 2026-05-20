@@ -1,0 +1,16 @@
+alembic
+asyncpg
+bcrypt
+fastapi
+passlib
+psycopg2-binary
+pydantic
+pydantic-settings
+PyJWT
+pytest
+pytest-asyncio
+python-dotenv
+python-multipart
+sentry-sdk[fastapi]
+SQLAlchemy
+uvicorn
