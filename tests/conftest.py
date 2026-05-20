@@ -63,8 +63,13 @@ async def client():
 
 @pytest_asyncio.fixture
 async def async_db():
-    async with db_session_module.AsyncSessionLocal() as session:
-        yield session
+    from sqlalchemy.ext.asyncio import AsyncSession
+    async with db_session_module.engine.connect() as conn:
+        trans = await conn.begin()
+        async_session = async_sessionmaker(conn, expire_on_commit=False, class_=AsyncSession)
+        async with async_session() as session:
+            yield session
+        await trans.rollback()
 
 @pytest.fixture
 def user_mock_data():
