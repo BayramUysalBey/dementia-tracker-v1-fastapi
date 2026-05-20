@@ -4,7 +4,7 @@ bcrypt
 fastapi
 passlib
 psycopg2-binary
-pydantic
+pydantic[email]
 pydantic-settings
 PyJWT
 httpx
