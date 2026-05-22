@@ -35,7 +35,7 @@ app.include_router(api_router, prefix="/api")
 async def main():
     return {"message": "Welcome to the Dementia Tracker V1 API!"}
 
-# niceGUI for frontends for api endpoints
+# niceGUI: frontends for api endpoints
 async def check_real_health():
     db_generator = get_db()
     db_session = await anext(db_generator)
@@ -96,3 +96,32 @@ def display_dashboard():
     ui.button("Fetch Habits with JWT", on_click=fetch_habits)    
 
 ui.run_with(app)
+
+
+from fastapi import FastAPI
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
+from app.services.scheduler_jobs import generate_and_send_monthly_reports
+from contextlib import asynccontextmanager
+
+
+scheduler = AsyncIOScheduler()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Starting Scheduler...")
+    
+    scheduler.add_job(
+        generate_and_send_monthly_reports, 
+        trigger=CronTrigger(day='last', hour=10),
+        id="monthly_report_job",
+        replace_existing=True
+    )
+    scheduler.start()
+    
+    yield
+    
+    print("Shutting down Scheduler...")
+    scheduler.shutdown()
+
+app = FastAPI(lifespan=lifespan)
