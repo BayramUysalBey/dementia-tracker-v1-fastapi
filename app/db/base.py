@@ -9,3 +9,4 @@ from app.db.models.reminder import Reminder
 from app.db.models.media import Media
 from app.db.models.habit import Habit
 from app.db.models.note import Note
+from app.db.models.monthly_report import MonthlyReport
