@@ -6,7 +6,7 @@
 #
 aiofiles==25.1.0
     # via nicegui
-aiohappyeyeballs==2.6.2
+aiohappyeyeballs==2.6.1
     # via aiohttp
 aiohttp==3.13.5
     # via
@@ -20,7 +20,7 @@ annotated-doc==0.0.4
     # via fastapi
 annotated-types==0.7.0
     # via pydantic
-anyio==4.13.0
+anyio==4.12.1
     # via
     #   httpx
     #   starlette
@@ -35,13 +35,13 @@ bcrypt==4.0.1
     # via -r requirements.in
 bidict==0.23.1
     # via python-socketio
-certifi==2026.5.20
+certifi==2026.1.4
     # via
     #   httpcore
     #   httpx
     #   nicegui
     #   sentry-sdk
-click==8.4.0
+click==8.3.1
     # via uvicorn
 colorama==0.4.6
     # via
@@ -50,11 +50,11 @@ colorama==0.4.6
     #   uvicorn
 defusedxml==0.7.1
     # via fpdf2
-dnspython==2.7.0
+dnspython==2.8.0
     # via email-validator
 docutils==0.22.4
     # via nicegui
-email-validator==2.2.0
+email-validator==2.3.0
     # via pydantic
 fastapi==0.128.7
     # via
@@ -69,7 +69,7 @@ frozenlist==1.8.0
     # via
     #   aiohttp
     #   aiosignal
-greenlet==3.5.0
+greenlet==3.3.2
     # via sqlalchemy
 h11==0.16.0
     # via
@@ -85,7 +85,7 @@ httpx==0.28.1
     # via
     #   -r requirements.in
     #   nicegui
-idna==3.15
+idna==3.11
     # via
     #   anyio
     #   email-validator
@@ -99,11 +99,13 @@ itsdangerous==2.2.0
     # via nicegui
 jinja2==3.1.6
     # via nicegui
-lxml==6.1.1
-    # via lxml-html-clean
-lxml-html-clean==0.4.5
+lxml==6.1.0
+    # via
+    #   lxml-html-clean
+    #   nicegui
+lxml-html-clean==0.4.4
     # via nicegui
-mako==1.3.12
+mako==1.3.10
     # via alembic
 markdown2==2.5.5
     # via nicegui
@@ -115,11 +117,11 @@ multidict==6.7.1
     # via
     #   aiohttp
     #   yarl
-nicegui==3.10.0
+nicegui==3.12.0
     # via -r requirements.in
 orjson==3.11.9
     # via nicegui
-packaging==26.2
+packaging==26.0
     # via pytest
 passlib==1.7.4
     # via -r requirements.in
@@ -156,16 +158,17 @@ pytest==9.0.2
     #   pytest-asyncio
 pytest-asyncio==1.3.0
     # via -r requirements.in
-python-dotenv==1.2.1
+python-dotenv==1.2.2
     # via
     #   -r requirements.in
+    #   nicegui
     #   pydantic-settings
     #   uvicorn
 python-engineio==4.13.1
     # via
     #   nicegui
     #   python-socketio
-python-multipart==0.0.22
+python-multipart==0.0.28
     # via
     #   -r requirements.in
     #   nicegui
@@ -185,6 +188,8 @@ starlette==0.52.1
     # via
     #   fastapi
     #   nicegui
+tinycss2==1.5.1
+    # via nicegui
 typing-extensions==4.15.0
     # via
     #   alembic
@@ -199,23 +204,25 @@ typing-inspection==0.4.2
     #   fastapi
     #   pydantic
     #   pydantic-settings
-tzdata==2026.2
+tzdata==2025.3
     # via tzlocal
 tzlocal==5.3.1
     # via apscheduler
-urllib3==2.7.0
+urllib3==2.6.3
     # via sentry-sdk
 uvicorn[standard]==0.40.0
     # via
     #   -r requirements.in
     #   nicegui
-watchfiles==1.2.0
+watchfiles==1.1.1
     # via
     #   nicegui
     #   uvicorn
+webencodings==0.5.1
+    # via tinycss2
 websockets==16.0
     # via uvicorn
 wsproto==1.3.2
     # via simple-websocket
-yarl==1.24.2
+yarl==1.23.0
     # via aiohttp
