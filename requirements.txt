@@ -48,6 +48,8 @@ colorama==0.4.6
     #   click
     #   pytest
     #   uvicorn
+defusedxml==0.7.1
+    # via fpdf2
 dnspython==2.7.0
     # via email-validator
 docutils==0.22.4
@@ -59,6 +61,10 @@ fastapi==0.128.7
     #   -r requirements.in
     #   nicegui
     #   sentry-sdk
+fonttools==4.63.0
+    # via fpdf2
+fpdf2==2.8.7
+    # via -r requirements.in
 frozenlist==1.8.0
     # via
     #   aiohttp
@@ -117,6 +123,8 @@ packaging==26.2
     # via pytest
 passlib==1.7.4
     # via -r requirements.in
+pillow==12.2.0
+    # via fpdf2
 pluggy==1.6.0
     # via pytest
 propcache==0.5.2

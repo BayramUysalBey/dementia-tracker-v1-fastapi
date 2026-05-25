@@ -17,3 +17,4 @@ SQLAlchemy
 uvicorn
 nicegui
 apscheduler
+fpdf2
