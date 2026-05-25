@@ -7,6 +7,29 @@ from nicegui import ui
 from app.api.routers.status import health
 from app.db.session import get_db
 import httpx
+from contextlib import asynccontextmanager
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.triggers.cron import CronTrigger
+from app.services.scheduler_jobs import generate_and_send_monthly_reports
+
+scheduler = AsyncIOScheduler()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Starting Scheduler...")
+    
+    scheduler.add_job(
+        generate_and_send_monthly_reports, 
+        trigger=CronTrigger(day='last', hour=10),
+        id="monthly_report_job",
+        replace_existing=True
+    )
+    scheduler.start()
+    
+    yield
+    
+    print("Shutting down Scheduler...")
+    scheduler.shutdown()
 
 
 """
@@ -25,7 +48,8 @@ if settings.SENTRY_DSN:
 app = FastAPI(
     title="Dementia Tracker V1 API",
     description="Main API for Dementia Tracker",
-    version=settings.VERSION
+    version=settings.VERSION,
+    lifespan=lifespan
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -95,33 +119,4 @@ def display_dashboard():
 
     ui.button("Fetch Habits with JWT", on_click=fetch_habits)    
 
-ui.run_with(app)
-
-
-from fastapi import FastAPI
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from apscheduler.triggers.cron import CronTrigger
-from app.services.scheduler_jobs import generate_and_send_monthly_reports
-from contextlib import asynccontextmanager
-
-
-scheduler = AsyncIOScheduler()
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    print("Starting Scheduler...")
-    
-    scheduler.add_job(
-        generate_and_send_monthly_reports, 
-        trigger=CronTrigger(day='last', hour=10),
-        id="monthly_report_job",
-        replace_existing=True
-    )
-    scheduler.start()
-    
-    yield
-    
-    print("Shutting down Scheduler...")
-    scheduler.shutdown()
-
-app = FastAPI(lifespan=lifespan)
+ui.run_with(app)

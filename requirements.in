@@ -16,3 +16,5 @@ sentry-sdk[fastapi]
 SQLAlchemy
 uvicorn
 nicegui
+apscheduler
+fpdf2
