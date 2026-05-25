@@ -1,13 +1,12 @@
 from fastapi_mail import FastMail, MessageSchema, ConnectionConfig, MessageType
 from pydantic import EmailStr, SecretStr
-import os
 from app.core.settings import settings
 
 
 conf = ConnectionConfig(
-    MAIL_USERNAME = settings.MAIL_USERNAME,
-    MAIL_PASSWORD = SecretStr(settings.MAIL_PASSWORD),
-    MAIL_FROM = settings.MAIL_FROM,
+    MAIL_USERNAME = settings.MAIL_USERNAME or "test@example.com",
+    MAIL_PASSWORD = SecretStr(settings.MAIL_PASSWORD or "secret"),
+    MAIL_FROM = settings.MAIL_FROM or "test@example.com",
     MAIL_SERVER = settings.MAIL_SERVER,
     MAIL_PORT = settings.MAIL_PORT,
     MAIL_STARTTLS = settings.MAIL_STARTTLS,
