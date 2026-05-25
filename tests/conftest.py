@@ -14,6 +14,7 @@ import uuid
 from app.api.deps import get_current_user
 from app.db.models.users import User
 from datetime import datetime, timezone
+import tempfile
 
 
 TEST_DB_NAME = settings.TEST_DB_NAME
@@ -155,4 +156,13 @@ async def authenticated_client(client: AsyncClient):
     app.dependency_overrides[get_current_user] = lambda: dummy_user
     yield client
     app.dependency_overrides.clear()
+    
+import tempfile
 
+@pytest.fixture(autouse=True)
+def override_upload_dir():
+    with tempfile.TemporaryDirectory() as temp_dir:
+        original_dir = settings.MEDIA_UPLOAD_DIR
+        settings.MEDIA_UPLOAD_DIR = temp_dir
+        yield
+        settings.MEDIA_UPLOAD_DIR = original_dir
