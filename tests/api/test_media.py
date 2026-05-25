@@ -1,6 +1,8 @@
 import pytest
 from httpx import AsyncClient
 import io # fake file creator
+from app.core.settings import settings
+
 
 @pytest.mark.asyncio
 async def test_create_and_read_media(
@@ -56,7 +58,7 @@ async def test_create_and_read_media(
     created_media = response_media.json()
     assert created_media["user_id"] == created_user_id
     assert created_media["media_url"].endswith(".jpg")
-    assert created_media["media_url"].startswith("/static/uploads/media/")
+    assert created_media["media_url"].startswith(f"/{settings.MEDIA_UPLOAD_DIR}/")
     assert "user_id" in created_media
     
     # 4. Read media

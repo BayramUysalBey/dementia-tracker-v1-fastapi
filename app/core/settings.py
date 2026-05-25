@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     SENTRY_DSN: str | None = None
     
+    MEDIA_UPLOAD_DIR: str = "static/uploads/media"
+    
     MAIL_USERNAME: EmailStr | None = None
     MAIL_PASSWORD: str = ""
     MAIL_FROM: EmailStr | None = None
@@ -20,5 +22,6 @@ class Settings(BaseSettings):
     MAIL_SSL_TLS: bool = False
     USE_CREDENTIALS: bool = True
     VALIDATE_CERTS: bool = True
+    
 
 settings = Settings()

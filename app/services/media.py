@@ -10,6 +10,7 @@ from fastapi import HTTPException, status, Depends
 import os
 import shutil
 from pathlib import Path
+from app.core.settings import settings
 
 
 class MediaService:
@@ -28,8 +29,7 @@ class MediaService:
         type: MediaType, 
         journal_id: uuid.UUID | None,
 		user_id: uuid.UUID) -> Media:
-        UPLOAD_DIR = "static/uploads/media"
-        os.makedirs(UPLOAD_DIR, exist_ok=True)
+        os.makedirs(settings.MEDIA_UPLOAD_DIR, exist_ok=True)
         
         ALLOWED_EXTENSIONS = {
             MediaType.PHOTO: [".jpg", ".jpeg", ".png", ".webp"],
@@ -43,10 +43,10 @@ class MediaService:
                 detail=f"Invalid file extension '{file_extension}' for media type '{type.value}'"
             )
         unique_filename = f"{uuid.uuid4()}{file_extension}"
-        file_path = os.path.join(UPLOAD_DIR, unique_filename)
+        file_path = os.path.join(settings.MEDIA_UPLOAD_DIR, unique_filename)
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
-        real_media_url = f"/{UPLOAD_DIR}/{unique_filename}"
+        real_media_url = f"/{settings.MEDIA_UPLOAD_DIR}/{unique_filename}"
         create_data = {
             "user_id": user_id,
             "journal_id": journal_id,
