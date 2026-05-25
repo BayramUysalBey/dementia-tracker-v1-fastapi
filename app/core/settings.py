@@ -11,9 +11,9 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     SENTRY_DSN: str | None = None
     
-    MAIL_USERNAME: EmailStr = ""
+    MAIL_USERNAME: EmailStr | None = None
     MAIL_PASSWORD: str = ""
-    MAIL_FROM: EmailStr = ""
+    MAIL_FROM: EmailStr | None = None
     MAIL_PORT: int = 587
     MAIL_SERVER: str = "smtp.gmail.com"
     MAIL_STARTTLS: bool = True
