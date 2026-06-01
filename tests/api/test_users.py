@@ -35,6 +35,19 @@ async def test_get_user_data(authenticated_client):
     response = await authenticated_client.get("/api/v1/users/me")
     assert response.status_code == 200 
     assert response.json()["username"] == "testuser"
+    
+
+@pytest.mark.asyncio  
+async def test_create_user_invalid_email(client: AsyncClient):
+    bad_data = {
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "not-an-email",
+        "password": "securepassword123"
+    }
+    response = await client.post("/api/v1/users/create", json=bad_data)
+    assert response.status_code == 422 
+
 
     
 
