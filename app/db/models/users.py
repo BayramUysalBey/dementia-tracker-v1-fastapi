@@ -8,15 +8,12 @@ from app.db.mixins import TimestampMixin
 from enum import Enum
 
 if TYPE_CHECKING:
-	from app.db.models.emergency_contact import EmergencyContact
 	from app.db.models.accounts import Account
+	from app.db.models.emergency_contact import EmergencyContact
+	from app.db.models.note import Note
+	from app.db.models.habit import Habit
 	from app.db.models.medication import Medication
 	from app.db.models.journal import Journal
-	from app.db.models.habit import Habit
-	from app.db.models.note import Note
-	from app.db.models.monthly_report import MonthlyReport
-	
-
 
 class UserRole(str, Enum):
 	__tablename__: str = "usersrole"
@@ -62,5 +59,3 @@ class User(BaseDBModel, TimestampMixin):
 	medications: Mapped[List["Medication"]] = relationship("Medication", back_populates="user")
 	journals_as_patient: Mapped[List["Journal"]] = relationship("Journal", foreign_keys="[Journal.user_id]", back_populates="user")
 	journals_as_author: Mapped[List["Journal"]] = relationship("Journal", foreign_keys="[Journal.author_id]", back_populates="author")
-	monthly_reports_as_author: Mapped[List["MonthlyReport"]] = relationship("MonthlyReport", foreign_keys="[MonthlyReport.author_id]", back_populates="author")
-	monthly_reports: Mapped[List["MonthlyReport"]] = relationship("MonthlyReport", foreign_keys="[MonthlyReport.user_id]", back_populates="user")
