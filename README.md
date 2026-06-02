@@ -1,8 +1,8 @@
 # Dementia Tracker v1
 
-Dementia Tracker v1 is a dedicated support application designed for caregivers who provide home care for dementia patients. This project leverages FastAPI to provide a modern, high-performance backend infrastructure for tracking and management.
+Dementia Tracker v1 is a dedicated support application designed for caregivers providing home care for dementia patients. This project leverages FastAPI to provide a modern, high-performance backend infrastructure for tracking, management, and daily journaling.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
@@ -22,16 +22,17 @@ Dementia Tracker v1 is a dedicated support application designed for caregivers w
 
 2. **Install Dependencies**:
 
+   The project utilizes pip-tools for dependency management. Install dependencies via the lockfile:
    ```bash
    pip install -r requirements.txt
    ```
 
 3. **Database Setup**:
 
-   Before running the application, you must configure your local database:
-   - Create a copy of the `.env.example` file and instantly rename it strictly to `.env`.
-   - Ensure you have a running PostgreSQL instance that exactly matches the `DATABASE_URL` credentials you set in your new `.env` file.
-   - Run the initial migrations to construct the database tables using Alembic:
+   Before running the application, configure your local database:
+   - Create a copy of the `.env.example` file and rename it to `.env`.
+   - Ensure you have a running PostgreSQL instance matching the `DATABASE_URL` credentials defined in your `.env` file.
+   - Run the initial migrations to construct the database schema using Alembic:
 
      ```bash
      alembic upgrade head
@@ -45,7 +46,7 @@ Dementia Tracker v1 is a dedicated support application designed for caregivers w
 
    Access the server at `http://localhost:8000`.
 
-## 🐳 Docker Usage
+## Docker Usage
 
 This project is fully containerized for consistent development and deployment environments.
 
@@ -62,21 +63,44 @@ docker run -p 8000:8000 dementia-tracker-v1
 ### Health Check
 
 Once running, you can verify the system status at:
-`http://localhost:8000/health`
+`http://localhost:8000/api/v1/status/health`
 
-## 🛠 Project Structure
+## Project Structure
 
 - `app/main.py`: Main FastAPI application entry point.
-- `app/api/routers/`: Modular route handlers (items, status).
-- `app/schemas/`: Pydantic data models for validation.
+- `app/api/routers/`: Modular route handlers (e.g., users, journals, reminders).
+- `app/services/`: Core business logic layer.
+- `app/db/crud/`: Data access layer for database operations.
+- `app/db/models/`: SQLAlchemy database models.
+- `app/schemas/`: Pydantic data models for validation and serialization.
 - `app/core/`: Application settings and configuration.
-- `Makefile`: Convenient shortcuts for common tasks (install, run, build, clean).
-- `Dockerfile`: Production-ready container configuration.
-- `.dockerignore`: Optimized build exclusions.
-- `requirements.txt`: Python package dependencies.
-- `tests/`: Automated test suite.
+- `docs/`: Sphinx documentation source files.
+- `tests/`: Automated integration and unit test suite.
 
-## 📜 Available Commands (Makefile)
+## Documentation
+
+The project uses Sphinx to generate HTML documentation from Python docstrings. To build the documentation locally:
+
+```bash
+cd docs
+.\make.bat html  # On Windows
+make html        # On Linux/macOS
+```
+The generated documentation can be viewed by opening `docs/build/html/index.html` in a web browser.
+
+## Testing
+
+The project includes an automated integration test suite utilizing `pytest` and `pytest-asyncio`. Tests execute against a dynamically generated test database to ensure complete isolation.
+
+### Run Tests
+
+Execute the full test suite from the root directory:
+
+```bash
+pytest
+```
+
+## Available Commands (Makefile)
 
 If you have `make` installed, you can use the following shortcuts:
 
@@ -84,23 +108,8 @@ If you have `make` installed, you can use the following shortcuts:
 - `make run`: Launch the FastAPI server with hot-reload.
 - `make build`: Build the Docker image.
 - `make docker-run`: Run the application within a Docker container.
+- `make test`: Execute the full integration and unit test suite.
 - `make clean`: Remove build artifacts (`build`, `dist`, `.egg-info`).
 
-## 🧪 Testing
-
-The project includes a suite of automated tests using `pytest`.
-
-### Run Tests
-
-```bash
-make test
-```
-
-Or manually:
-
-```bash
-pytest tests/test.py
-```
-
 ---
-*Developed with focus on supporting home care for dementia patients.*
+*Developed with a focus on supporting home care for dementia patients.*

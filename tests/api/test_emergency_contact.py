@@ -40,3 +40,32 @@ async def test_create_and_read_emergency_contact(
     contacts_list = response_read.json()
     assert len(contacts_list) == 1
     assert contacts_list[0]["id"] == created_contact["id"]
+    
+
+@pytest.mark.asyncio  
+async def test_create_emergency_contact_invalid_email(
+    client: AsyncClient, 
+    user_mock_data: dict, 
+    emergency_contact_mock_data: dict
+):
+    response_create = await client.post("/api/v1/users/create", json=user_mock_data)
+    login_data = {
+        "username": user_mock_data["email"],
+        "password": user_mock_data["password"]
+    }
+    response_login = await client.post("/api/v1/auth/token", data=login_data)
+    token = response_login.json()["access_token"]
+    auth_headers = {"Authorization": f"Bearer {token}"}
+
+    bad_data = emergency_contact_mock_data.copy()
+    bad_data["email"] = "first_name_last_name.com"
+    bad_data["user_id"] = response_create.json()["id"]
+
+    response = await client.post(
+        "/api/v1/emergency_contact", 
+        json=bad_data,
+        headers=auth_headers
+    )
+    assert response.status_code == 422
+    error_response = response.json()
+    assert error_response["detail"][0]["loc"] == ["body", "email"]

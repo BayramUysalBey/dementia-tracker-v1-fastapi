@@ -51,3 +51,37 @@ async def test_create_reminder_unauthorized(client: AsyncClient, reminder_mock_d
     assert response.status_code == 401
     error_response = response.json()
     assert error_response["detail"] == "Not authenticated"
+    
+
+@pytest.mark.asyncio  
+async def test_create_reminder_invalid_related_entity_id(
+    client: AsyncClient, 
+    user_mock_data: dict, 
+    reminder_mock_data: dict
+):
+    response_create = await client.post("/api/v1/users/create", json=user_mock_data)
+    login_data = {
+        "username": user_mock_data["email"],
+        "password": user_mock_data["password"]
+    }
+    response_login = await client.post("/api/v1/auth/token", data=login_data)
+    token = response_login.json()["access_token"]
+    auth_headers = {"Authorization": f"Bearer {token}"}
+
+    bad_data = reminder_mock_data.copy()
+    bad_data["related_entity_id"] = 789
+    bad_data["user_id"] = response_create.json()["id"]
+
+    response = await client.post(
+        "/api/v1/reminder", 
+        json=bad_data,
+        headers=auth_headers
+    )
+    assert response.status_code == 422
+    error_response = response.json()
+    
+    # print("\n--- API ERROR RESPONSE ---")
+    # print(error_response)
+    # print("--------------------------\n")
+    
+    assert error_response["detail"][0]["loc"] == ["body", "related_entity_id"]

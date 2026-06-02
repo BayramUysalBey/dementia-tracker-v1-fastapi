@@ -137,5 +137,3 @@ async def test_create_media_no_journal_id(client: AsyncClient, user_mock_data: d
     assert response_media.status_code == 201
     created_media = response_media.json()
     assert created_media.get("journal_id") is None
-    
-	

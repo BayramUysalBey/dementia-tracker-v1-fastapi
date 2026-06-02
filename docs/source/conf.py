@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'dementia_tracker'
+project = 'Dementia Tracker'
 copyright = '2026, bayram_uysal'
 author = 'bayram_uysal'
 release = '2026'
