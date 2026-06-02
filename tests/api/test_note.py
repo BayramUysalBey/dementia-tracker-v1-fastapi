@@ -73,3 +73,32 @@ async def test_create_note_unauthorized(client: AsyncClient, note_mock_data: dic
     assert response.status_code == 401
     error_response = response.json()
     assert error_response["detail"] == "Not authenticated"
+    
+
+@pytest.mark.asyncio  
+async def test_create_note_invalid_title(
+    client: AsyncClient, 
+    user_mock_data: dict, 
+    note_mock_data: dict
+):
+    response_create = await client.post("/api/v1/users/create", json=user_mock_data)
+    login_data = {
+        "username": user_mock_data["email"],
+        "password": user_mock_data["password"]
+    }
+    response_login = await client.post("/api/v1/auth/token", data=login_data)
+    token = response_login.json()["access_token"]
+    auth_headers = {"Authorization": f"Bearer {token}"}
+
+    bad_data = note_mock_data.copy()
+    bad_data["title"] = 777
+    bad_data["user_id"] = response_create.json()["id"]
+
+    response = await client.post(
+        "/api/v1/note", 
+        json=bad_data,
+        headers=auth_headers
+    )
+    assert response.status_code == 422
+    error_response = response.json()
+    assert error_response["detail"][0]["loc"] == ["body", "title"]
