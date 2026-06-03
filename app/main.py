@@ -45,7 +45,7 @@ def display_dashboard():
         async def do_login():
             data = {"username": email_input.value, "password": password_input.value}
             async with httpx.AsyncClient() as client:
-                response = await client.post("http://localhost:8000/api/v1/auth/token", data=data)
+                response = await client.post(settings.BASE_URL_FRONT_ONE, data=data)
             if response.status_code == 200:
                 session["token"] = response.json().get("access_token")
                 ui.notify("Login successful! Token saved.", type="positive")
@@ -63,7 +63,7 @@ def display_dashboard():
             return
         headers = {"Authorization": f"Bearer {session['token']}"}    
         async with httpx.AsyncClient() as client:
-            response = await client.get("http://localhost:8000/api/v1/habit", headers=headers)    
+            response = await client.get(settings.BASE_URL_FRONT_TWO, headers=headers)    
             if response.status_code == 200:
                 habits_data = response.json()
                 table_container.clear()

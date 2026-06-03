@@ -1,5 +1,5 @@
 import uuid
-import random
+import secrets
 from string import ascii_lowercase, digits
 from typing import Sequence
 from passlib.context import CryptContext
@@ -32,7 +32,7 @@ class UserService:
 
     def random_username(self, email: str) -> str:
         random_first = email.split("@")[0]
-        random_last = "".join(random.choices(f"{ascii_lowercase}{digits}", k=4))
+        random_last = "".join(secrets.choice(ascii_lowercase + digits) for _ in range(4))
         return f"{random_first}{random_last}"
     
 
