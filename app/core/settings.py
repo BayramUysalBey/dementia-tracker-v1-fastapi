@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import EmailStr
+from pydantic import EmailStr, field_validator
 
 class Settings(BaseSettings):
     VERSION: str = "1.0.0"
@@ -16,15 +16,20 @@ class Settings(BaseSettings):
     
     MEDIA_UPLOAD_DIR: str = "static/uploads/media"
     
-    MAIL_USERNAME: EmailStr | None = None
-    MAIL_PASSWORD: str | None = None
-    MAIL_FROM: EmailStr | None = None
-    MAIL_PORT: int = 587
-    MAIL_SERVER: str = "smtp.gmail.com"
-    MAIL_STARTTLS: bool = True
-    MAIL_SSL_TLS: bool = False
-    USE_CREDENTIALS: bool = True
-    VALIDATE_CERTS: bool = True
+    @field_validator("DATABASE_URL")
+    @classmethod
+    def check_database_url(cls, v: str) -> str:
+        if not v:
+            raise ValueError(
+                "DATABASE_URL is missing! If you are deploying to a cloud provider "
+                "(like Railway, Render, etc.), you MUST set the DATABASE_URL environment "
+                "variable in their dashboard. The .env file is NOT uploaded to the cloud."
+            )
+        if v.startswith('"') or v.startswith("'"):
+            raise ValueError(
+                "DATABASE_URL should NOT start with quotation marks. "
+                "Remove the quotes from your environment variables in your cloud dashboard."
+            )
+        return v
     
-
 settings = Settings()

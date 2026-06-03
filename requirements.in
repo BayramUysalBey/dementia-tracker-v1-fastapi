@@ -1,7 +1,7 @@
 alembic
 asyncpg
 bcrypt
-fastapi
+fastapi[standard]
 passlib
 psycopg2-binary
 pydantic[email]
