@@ -18,7 +18,6 @@ async def login_for_access_token(
     user_service = UserService(db=db, crud=UserCRUD(db))
     
     user = await user_service.get_user_by_email(email=form_data.username)
-    print(f"DEBUG: Did we find the user? {user}")
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password")
     is_password_correct = verify_password(plain_password=form_data.password, hashed_password=user.hashed_password)
