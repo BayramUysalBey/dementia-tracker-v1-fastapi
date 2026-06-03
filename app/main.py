@@ -83,4 +83,4 @@ def display_dashboard():
 
     ui.button("Fetch Habits with JWT", on_click=fetch_habits)    
 
-ui.run_with(app)
+ui.run_with(app, storage_secret=settings.SECRET_KEY or "dev-secret-key-1234")
