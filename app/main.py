@@ -10,25 +10,28 @@ from app.db.base import BaseDBModel
 import httpx
 import asyncio
 
-async def _init_db():
+from contextlib import asynccontextmanager
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Running database creation...")
     async with engine.begin() as conn:
         await conn.run_sync(BaseDBModel.metadata.create_all)
-
-try:
-    asyncio.run(_init_db())
     print("Database tables ensured!")
-except Exception as e:
-    print(f"DB init failed: {e}")
-
-import httpx
-
-
+    yield
 
 app = FastAPI(
     title="Dementia Tracker V1 API",
     description="Main API for Dementia Tracker",
-    version=settings.VERSION
+    version=settings.VERSION,
+    lifespan=lifespan
 )
+
+
+
+
+
+
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(api_router, prefix="/api")
