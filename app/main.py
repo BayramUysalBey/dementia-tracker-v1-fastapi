@@ -1,3 +1,9 @@
+import subprocess
+try:
+    subprocess.run(['alembic', 'upgrade', 'head'], check=True)
+except:
+    pass
+
 import sentry_sdk
 from fastapi import FastAPI
 from app.api.routers import api_router
