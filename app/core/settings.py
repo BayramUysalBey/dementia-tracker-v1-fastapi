@@ -25,6 +25,10 @@ class Settings(BaseSettings):
                 "(like Railway, Render, etc.), you MUST set the DATABASE_URL environment "
                 "variable in their dashboard. The .env file is NOT uploaded to the cloud."
             )
+        if v.startswith("postgres://"):
+            v = v.replace("postgres://", "postgresql+asyncpg://", 1)
+        elif v.startswith("postgresql://") and not v.startswith("postgresql+asyncpg://"):
+            v = v.replace("postgresql://", "postgresql+asyncpg://", 1)
         if v.startswith('"') or v.startswith("'"):
             raise ValueError(
                 "DATABASE_URL should NOT start with quotation marks. "
