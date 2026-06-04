@@ -30,4 +30,4 @@ USER appuser
 EXPOSE 8000
 
 # Run with a production-grade uvicorn setup (multiple workers and proxy headers)
-CMD sh -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1 --proxy-headers"
+CMD sh -c "uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 1 --proxy-headers"
