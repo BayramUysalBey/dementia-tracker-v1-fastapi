@@ -5,16 +5,33 @@ from app.core.settings import settings
 from fastapi.staticfiles import StaticFiles
 from nicegui import ui
 from app.api.routers.status import health
-from app.db.session import get_db
+from app.db.session import get_db, engine
+from app.db.base import BaseDBModel
 import httpx
+import asyncio
 
+from contextlib import asynccontextmanager
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Running database creation...")
+    async with engine.begin() as conn:
+        await conn.run_sync(BaseDBModel.metadata.create_all)
+    print("Database tables ensured!")
+    yield
 
 app = FastAPI(
     title="Dementia Tracker V1 API",
     description="Main API for Dementia Tracker",
-    version=settings.VERSION
+    version=settings.VERSION,
+    lifespan=lifespan
 )
+
+
+
+
+
+
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(api_router, prefix="/api")

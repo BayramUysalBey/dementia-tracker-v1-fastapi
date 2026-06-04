@@ -9,12 +9,20 @@ from app.api.deps import get_current_user
 
 router = APIRouter()
 
+import traceback
+from fastapi import HTTPException
+
 @router.post("/create", response_model=UserRead, status_code=status.HTTP_201_CREATED)
 async def create_user(
     user_in: UserCreate, 
     user_service: UserService = Depends(UserService)
 ):
-    return await user_service.create_user(user_in)
+    try:
+        return await user_service.create_user(user_in)
+    except Exception as e:
+        error_msg = f"{type(e).__name__}: {str(e)}"
+        raise HTTPException(status_code=500, detail=error_msg)
+
 
 @router.get("/me", response_model=UserRead)
 async def read_users_me(
