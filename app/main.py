@@ -1,9 +1,3 @@
-import subprocess
-try:
-    subprocess.run(['alembic', 'upgrade', 'head'], check=True)
-except:
-    pass
-
 import sentry_sdk
 from fastapi import FastAPI
 from app.api.routers import api_router
@@ -11,7 +5,21 @@ from app.core.settings import settings
 from fastapi.staticfiles import StaticFiles
 from nicegui import ui
 from app.api.routers.status import health
-from app.db.session import get_db
+from app.db.session import get_db, engine
+from app.db.base import BaseDBModel
+import httpx
+import asyncio
+
+async def _init_db():
+    async with engine.begin() as conn:
+        await conn.run_sync(BaseDBModel.metadata.create_all)
+
+try:
+    asyncio.run(_init_db())
+    print("Database tables ensured!")
+except Exception as e:
+    print(f"DB init failed: {e}")
+
 import httpx
 
 
