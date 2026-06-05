@@ -27,12 +27,6 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-
-
-
-
-
-
 app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(api_router, prefix="/api")
 
@@ -70,6 +64,29 @@ def display_dashboard():
                 ui.notify("Login failed. Check credentials.", type="negative")
                 
     ui.button("Login", on_click=do_login)
+    
+
+    ui.label("Authentication").classes('text-2xl font-bold')
+    first_name = ui.input("First Name")
+    last_name = ui.input("Last Name")
+    email = ui.input("Email")
+    user_name = ui.input("Username")
+    password = ui.input("Password", password=True)
+    async def do_register():
+        data = {"first_name": first_name.value,
+                "last_name": last_name.value,
+                "role": "caregiver",
+                "email": email.value,
+                "username": user_name.value,
+                "password": password.value}
+        async with httpx.AsyncClient() as client:
+            response = await client.post("https://dementia-tracker.fastapicloud.dev/api/v1/users/create", json=data)
+        if response.status_code == 201:
+            ui.notify("Account created successfully! You can now log in.", type="positive")
+        else:
+            ui.notify(f"Register failed: {response.text}", type="negative")
+    ui.button("Register", on_click=do_register)
+
 
     ui.separator().classes('my-6')
     ui.label("My Habits").classes('text-2xl font-bold')
