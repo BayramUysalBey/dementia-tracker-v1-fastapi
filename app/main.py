@@ -1,4 +1,3 @@
-import sentry_sdk
 from fastapi import FastAPI
 from app.api.routers import api_router
 from app.core.settings import settings
@@ -8,11 +7,11 @@ from app.api.routers.status import health
 from app.db.session import get_db, engine
 from app.db.base import BaseDBModel
 import httpx
-import asyncio
+
 
 from contextlib import asynccontextmanager
 
-@asynccontextmanager
+@asynccontextmanager #for lifespan
 async def lifespan(app: FastAPI):
     print("Running database creation...")
     async with engine.begin() as conn:
@@ -35,6 +34,7 @@ async def main():
     return {"message": "Welcome to the Dementia Tracker V1 API!"}
 
 # niceGUI: frontends for api endpoints
+
 async def check_real_health():
     db_generator = get_db()
     db_session = await anext(db_generator)
@@ -44,6 +44,8 @@ async def check_real_health():
 
 @ui.page("/")
 def display_dashboard():
+    dark = ui.dark_mode()
+    ui.switch('Dark mode', on_change=lambda e: dark.enable() if e.value else dark.disable())
     with ui.column().classes('p-6 gap-3'):
         ui.label("NiceGUI + FastAPI United!").classes('text-2xl font-bold text-indigo-900')
         ui.label("Both running on the same port in unified memory heap.")
@@ -116,5 +118,6 @@ def display_dashboard():
                 ui.notify("Failed to fetch habits. Invalid token?", type="negative")
 
     ui.button("Fetch Habits with JWT", on_click=fetch_habits)    
+
 
 ui.run_with(app, storage_secret=settings.SECRET_KEY or "dev-secret-key-1234")
