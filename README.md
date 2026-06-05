@@ -2,6 +2,13 @@
 
 Dementia Tracker v1 is a dedicated support application designed for caregivers providing home care for dementia patients. This project leverages FastAPI to provide a modern, high-performance backend infrastructure for tracking, management, and daily journaling.
 
+## Live Demo
+
+You can try out the fully functional, cloud-deployed version of the application here:
+**[https://dementia-tracker.fastapicloud.dev/](https://dementia-tracker.fastapicloud.dev/)**
+
+*(Feel free to register a new account and test the secure dashboard!)*
+
 ## Quick Start
 
 ### Prerequisites

@@ -7,9 +7,8 @@ from app.api.routers.status import health
 from app.db.session import get_db, engine
 from app.db.base import BaseDBModel
 import httpx
-
-
 from contextlib import asynccontextmanager
+
 
 @asynccontextmanager #for lifespan
 async def lifespan(app: FastAPI):
@@ -18,6 +17,7 @@ async def lifespan(app: FastAPI):
         await conn.run_sync(BaseDBModel.metadata.create_all)
     print("Database tables ensured!")
     yield
+
 
 app = FastAPI(
     title="Dementia Tracker V1 API",
@@ -33,6 +33,7 @@ app.include_router(api_router, prefix="/api")
 async def main():
     return {"message": "Welcome to the Dementia Tracker V1 API!"}
 
+
 # niceGUI: frontends for api endpoints
 
 async def check_real_health():
@@ -44,8 +45,7 @@ async def check_real_health():
 
 @ui.page("/")
 def display_dashboard():
-    dark = ui.dark_mode()
-    ui.switch('Dark mode', on_change=lambda e: dark.enable() if e.value else dark.disable())
+    ui.switch('Dark mode', on_change=lambda e: ui.run_javascript(f'Quasar.Dark.set({str(e.value).lower()})'))
     with ui.column().classes('p-6 gap-3'):
         ui.label("NiceGUI + FastAPI United!").classes('text-2xl font-bold text-indigo-900')
         ui.label("Both running on the same port in unified memory heap.")
