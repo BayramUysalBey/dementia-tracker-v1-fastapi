@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, status
 from app.schemas.reminder import ReminderCreate, ReminderRead, ReminderUpdate
 from app.services.reminder import ReminderService
 from app.api.deps import get_current_user
-from app.db.models.reminder import Reminder
 from app.db.models.users import User
 
 

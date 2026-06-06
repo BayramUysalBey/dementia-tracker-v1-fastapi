@@ -15,6 +15,12 @@ async def lifespan(app: FastAPI):
     print("Running database creation...")
     async with engine.begin() as conn:
         await conn.run_sync(BaseDBModel.metadata.create_all)
+        """I explicitly used the lifespan event to generate 
+        schemas because I did not have a CI/CD pipeline 
+        configured to run Alembic migrations against the 
+        cloud database. In a professional environment, 
+        I would remove create_all and strictly execute 
+        Alembic via GitHub Actions."""
     print("Database tables ensured!")
     yield
 
@@ -43,7 +49,7 @@ async def check_real_health():
     ui.notify(f"DB Status: {real_status.database}")
     
 
-@ui.page("/")
+@ui.page("/", title="Dementia Tracker")
 def display_dashboard():
     ui.switch('Dark mode', on_change=lambda e: ui.run_javascript(f'Quasar.Dark.set({str(e.value).lower()})'))
     with ui.column().classes('p-6 gap-3'):

@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, status
 from app.schemas.medication import MedicationCreate, MedicationRead, MedicationUpdate
 from app.services.medication import MedicationService
 from app.api.deps import get_current_user
-from app.db.models.medication import Medication
 from app.db.models.users import User
 
 

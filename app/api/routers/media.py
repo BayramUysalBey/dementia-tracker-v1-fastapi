@@ -1,12 +1,12 @@
 import uuid
 from typing import List
 from fastapi import APIRouter, Depends, status, File, UploadFile, Form
-from app.schemas.media import MediaCreate, MediaRead, MediaUpdate
+from app.schemas.media import MediaRead, MediaUpdate
 from app.services.media import MediaService
 from app.api.deps import get_current_user
 from app.db.models.media import MediaType
 from app.db.models.users import User
-import urllib3
+
 
 router = APIRouter()
 

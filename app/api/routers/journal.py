@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, status
 from app.schemas.journal import JournalCreate, JournalRead, JournalUpdate
 from app.services.journal import JournalService
 from app.api.deps import get_current_user
-from app.db.models.journal import Journal
 from app.db.models.users import User
 
 

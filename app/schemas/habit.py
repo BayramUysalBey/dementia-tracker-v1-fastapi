@@ -1,6 +1,5 @@
 import uuid
 from pydantic import BaseModel, ConfigDict
-from app.db.models.habit import HabitType
 
 class HabitBase(BaseModel):  
     name: str | None = None

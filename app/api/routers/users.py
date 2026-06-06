@@ -1,7 +1,5 @@
-import uuid
 from typing import List
 from fastapi import APIRouter, Depends, status
-
 from app.schemas.users import UserRead, UserCreate, UserUpdate
 from app.db.models.users import User
 from app.services.users import UserService
@@ -9,7 +7,6 @@ from app.api.deps import get_current_user
 
 router = APIRouter()
 
-import traceback
 from fastapi import HTTPException
 
 @router.post("/create", response_model=UserRead, status_code=status.HTTP_201_CREATED)

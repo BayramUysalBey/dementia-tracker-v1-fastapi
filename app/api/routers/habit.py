@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, status
 from app.schemas.habit import HabitCreate, HabitRead, HabitUpdate
 from app.services.habit import HabitService
 from app.api.deps import get_current_user
-from app.db.models.habit import Habit
 from app.db.models.users import User
 
 

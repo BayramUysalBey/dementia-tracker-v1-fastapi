@@ -1,10 +1,8 @@
 import uuid
-from typing import Optional
-from sqlalchemy import String, ForeignKey, DateTime
+from sqlalchemy import String, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 from app.db.base_model import BaseDBModel
 from app.db.mixins import TimestampMixin
-from datetime import datetime
 import enum
 
 

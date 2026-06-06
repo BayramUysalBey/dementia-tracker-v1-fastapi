@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import EmailStr, field_validator
+from pydantic import field_validator
 
 class Settings(BaseSettings):
     VERSION: str = "1.0.0"

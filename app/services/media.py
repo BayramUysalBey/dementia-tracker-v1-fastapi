@@ -4,7 +4,7 @@ from fastapi import  Depends, UploadFile, Form
 from app.db.session import get_db
 from app.db.crud.media import MediaCRUD
 from app.db.models.media import MediaType, Media
-from app.schemas.media import MediaCreate, MediaUpdate
+from app.schemas.media import MediaUpdate
 import uuid
 from fastapi import HTTPException, status, Depends
 import os

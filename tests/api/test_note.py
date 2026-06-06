@@ -1,6 +1,5 @@
 import pytest
 from httpx import AsyncClient
-import uuid
 
 @pytest.mark.asyncio
 async def test_create_and_read_note(

@@ -4,7 +4,6 @@ from fastapi import APIRouter, Depends, status
 from app.schemas.note import NoteCreate, NoteRead, NoteUpdate
 from app.services.note import NoteService
 from app.api.deps import get_current_user
-from app.db.models.note import Note
 from app.db.models.users import User
 
 
