@@ -125,5 +125,38 @@ def display_dashboard():
 
     ui.button("Fetch Habits with JWT", on_click=fetch_habits)    
 
+    ui.separator().classes('my-6')
+    ui.label("Create a New Habit").classes('text-2xl font-bold')
+    
+    habit_name_input = ui.input("Habit Name (e.g., Morning Walk)")
+    frequency_input = ui.input("Target Frequency (e.g., Daily)")
+    
+    async def create_new_habit():
+        if not session.get("token"):
+            ui.notify("Please login first!", type="warning")
+            return
+            
+        # Notice we don't include id or user_id here!
+        data = {
+            "name": habit_name_input.value,
+            "target_frequency": frequency_input.value,
+            "streak_count": 0
+        }
+        
+        headers = {"Authorization": f"Bearer {session['token']}"}
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.post("https://dementia-tracker.fastapicloud.dev/api/v1/habit", json=data, headers=headers)
+            
+        if response.status_code == 201:
+            ui.notify("Habit created successfully!", type="positive")
+            habit_name_input.value = ""
+            frequency_input.value = ""
+            await fetch_habits() # Automatically refresh your table!
+        else:
+            ui.notify(f"Failed to create habit: {response.text}", type="negative")
+            
+    ui.button("Create Habit", on_click=create_new_habit).classes('bg-green-600 text-white')
+
 
 ui.run_with(app, storage_secret=settings.SECRET_KEY or "dev-secret-key-1234")
