@@ -136,7 +136,6 @@ def display_dashboard():
             ui.notify("Please login first!", type="warning")
             return
             
-        # Notice we don't include id or user_id here!
         data = {
             "name": habit_name_input.value,
             "target_frequency": frequency_input.value,
@@ -152,7 +151,7 @@ def display_dashboard():
             ui.notify("Habit created successfully!", type="positive")
             habit_name_input.value = ""
             frequency_input.value = ""
-            await fetch_habits() # Automatically refresh your table!
+            await fetch_habits()
         else:
             ui.notify(f"Failed to create habit: {response.text}", type="negative")
             
