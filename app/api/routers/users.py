@@ -9,6 +9,10 @@ router = APIRouter()
 
 from fastapi import HTTPException
 
+import logging
+logger = logging.getLogger(__name__)
+
+
 @router.post("/create", response_model=UserRead, status_code=status.HTTP_201_CREATED)
 async def create_user(
     user_in: UserCreate, 
@@ -19,7 +23,8 @@ async def create_user(
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail="Intenal server error")
+        logger.error("Unexpected error in create_user: %s", e, exc_info=True)
+        raise HTTPException(status_code=500, detail="Internal server error")
 
 @router.get("/me", response_model=UserRead)
 async def read_users_me(
@@ -31,7 +36,8 @@ async def read_users_me(
 async def read_users(
     skip: int = 0, 
     limit: int = 100, 
-    user_service: UserService = Depends(UserService)
+    user_service: UserService = Depends(UserService),
+    current_user: User = Depends(get_current_user)
 ):
     users = await user_service.get_all_users(skip=skip, limit=limit)
     if not users:

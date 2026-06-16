@@ -1,6 +1,6 @@
 from typing import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
-from fastapi import  Depends, UploadFile, Form
+from fastapi import  Depends, UploadFile
 from app.db.session import get_db
 from app.db.crud.media import MediaCRUD
 from app.db.models.media import MediaType, Media
@@ -8,9 +8,9 @@ from app.schemas.media import MediaUpdate
 import uuid
 from fastapi import HTTPException, status, Depends
 import os
-import shutil
 from pathlib import Path
 from app.core.settings import settings
+import asyncio
 
 
 class MediaService:
@@ -44,8 +44,27 @@ class MediaService:
             )
         unique_filename = f"{uuid.uuid4()}{file_extension}"
         file_path = os.path.join(settings.MEDIA_UPLOAD_DIR, unique_filename)
-        with open(file_path, "wb") as buffer:
-            shutil.copyfileobj(file.file, buffer)
+        MAX_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
+
+        def write_file():
+            total = 0
+            with open(file_path, "wb") as buffer:
+                while chunk := file.file.read(1024 * 1024):  # read 1 MB at a time
+                    total += len(chunk)
+                    if total > MAX_FILE_SIZE:
+                        buffer.close()
+                        os.remove(file_path)
+                        raise ValueError("File too large")
+                    buffer.write(chunk)
+
+        try:
+            await asyncio.to_thread(write_file)
+        except ValueError as e:
+            raise HTTPException(
+                status_code=status.HTTP_413_CONTENT_TOO_LARGE,
+                detail=str(e)
+            )
+
         real_media_url = f"/{settings.MEDIA_UPLOAD_DIR}/{unique_filename}"
         create_data = {
             "user_id": user_id,
@@ -54,14 +73,19 @@ class MediaService:
             "type": type,
             "media_url": real_media_url
         }
+        try:
+            media = await self.crud.create_media(create_data)
+            await self.db.refresh(media)
+            return media
+        except Exception:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            raise
         
-        media = await self.crud.create_media(create_data)
-        await self.db.refresh(media)
-        return media
-
     async def get_all_media(self, user_id: uuid.UUID, skip: int = 0, limit: int = 1000) -> Sequence[Media]:
         return await self.crud.media_for_user(user_id=user_id, skip=skip, limit=limit)
     
+
     async def update_media(self, media_id: uuid.UUID, user_id: uuid.UUID, user_in: MediaUpdate) -> Media:
         db_object = await self.crud.get_media_by_id(media_id)
         if not db_object or db_object.user_id != user_id:

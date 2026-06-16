@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.routers import users, status, accounts, auth, emergency_contact, medication, journal, reminder, media, habit, note
+from app.api.routers import users, status, accounts, auth, emergency_contact, medication, journal, reminder, media, habit, note, care_assignment
 
 
 api_router = APIRouter()
@@ -14,3 +14,4 @@ api_router.include_router(reminder.router, prefix="/v1/reminder", tags=["Reminde
 api_router.include_router(media.router, prefix="/v1/media", tags=["Media"])
 api_router.include_router(habit.router, prefix="/v1/habit", tags=["Habit"])
 api_router.include_router(note.router, prefix="/v1/note", tags=["Note"])
+api_router.include_router(care_assignment.router, prefix="/v1/care-assignments", tags=["Care Assignments"])

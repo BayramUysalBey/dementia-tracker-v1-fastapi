@@ -45,8 +45,11 @@ async def main():
 async def check_real_health():
     db_generator = get_db()
     db_session = await anext(db_generator)
-    real_status = await health(db_session=db_session)
-    ui.notify(f"DB Status: {real_status.database}")
+    try:
+        real_status = await health(db_session=db_session)
+        ui.notify(f"DB Status: {real_status.database}")
+    finally:
+        await db_generator.aclose()
     
 
 @ui.page("/", title="Dementia Tracker")
@@ -126,4 +129,8 @@ def display_dashboard():
     ui.button("Fetch Habits with JWT", on_click=fetch_habits)    
 
 
-ui.run_with(app, storage_secret=settings.SECRET_KEY or "dev-secret-key-1234")
+if not settings.SECRET_KEY:
+    raise RuntimeError(
+        "SECRET_KEY is not set. Add it to your .env file or cloud environment variables."
+    )
+ui.run_with(app, storage_secret=settings.SECRET_KEY)

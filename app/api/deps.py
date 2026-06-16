@@ -32,7 +32,7 @@ async def get_current_user(
             raise credentials_exception
         try:
             user_uuid = uuid.UUID(user_id_str)
-        except ValueError:
+        except (ValueError, TypeError, AttributeError):
               raise credentials_exception
 
     except InvalidTokenError:
