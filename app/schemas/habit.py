@@ -8,15 +8,11 @@ class HabitBase(BaseModel):
     
     
 class HabitCreate(HabitBase):
-    name: str | None = None
-    target_frequency: str | None = None
-    streak_count: int | None = None
+    pass
     
     
 class HabitUpdate(BaseModel):
-    name: str | None = None
-    target_frequency: str | None = None
-    streak_count: int | None = None
+    pass
     
     
 class HabitRead(HabitBase):

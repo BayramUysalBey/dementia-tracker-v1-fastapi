@@ -25,7 +25,7 @@ class HabitCRUD:
         for field, value in obj_in.items():
             if hasattr(db_object, field):
                 setattr(db_object, field, value)
-                await self.db.flush()
+        await self.db.flush()
         return db_object
     
     async def list_all(self, skip: int = 0, limit: int = 100) -> Sequence[Habit]:

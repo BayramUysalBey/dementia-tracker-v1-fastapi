@@ -26,7 +26,7 @@ class Note(BaseDBModel, TimestampMixin):
 	)
 	user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
 	user: Mapped["User"] = relationship("User", foreign_keys=[user_id], back_populates="notes")
-	author_id: Mapped[Optional[uuid.UUID]] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+	author_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
 	author: Mapped[Optional["User"]] = relationship("User", foreign_keys=[author_id], back_populates="notes_as_author")
 	title: Mapped[str] = mapped_column(String(255))
 	content: Mapped[str] = mapped_column(Text())

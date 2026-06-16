@@ -64,7 +64,7 @@ def display_dashboard():
         async def do_login():
             data = {"username": email_input.value, "password": password_input.value}
             async with httpx.AsyncClient() as client:
-                response = await client.post("https://dementia-tracker.fastapicloud.dev/api/v1/auth/token", data=data)
+                response = await client.post( settings.WEB_URL_TOKEN, data=data)
             if response.status_code == 200:
                 session["token"] = response.json().get("access_token")
                 ui.notify("Login successful! Token saved.", type="positive")
@@ -88,7 +88,7 @@ def display_dashboard():
                 "username": user_name.value,
                 "password": password.value}
         async with httpx.AsyncClient() as client:
-            response = await client.post("https://dementia-tracker.fastapicloud.dev/api/v1/users/create", json=data)
+            response = await client.post(settings.WEB_URL_CREATE, json=data)
         if response.status_code == 201:
             ui.notify("Account created successfully! You can now log in.", type="positive")
         else:
@@ -105,7 +105,7 @@ def display_dashboard():
             return
         headers = {"Authorization": f"Bearer {session['token']}"}    
         async with httpx.AsyncClient() as client:
-            response = await client.get("https://dementia-tracker.fastapicloud.dev/api/v1/habit", headers=headers)    
+            response = await client.get(settings.WEB_URL_HABIT, headers=headers)    
             if response.status_code == 200:
                 habits_data = response.json()
                 table_container.clear()

@@ -10,8 +10,9 @@ from app.db.session import get_db
 from app.db.crud.users import UserCRUD
 from app.db.models.users import User
 from app.schemas.users import UserCreate, UserUpdate
+from app.core.security import get_password_hash, password_hashing
 
-password_hashing = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 class UserService:
     def __init__(
@@ -44,7 +45,7 @@ class UserService:
                 detail="User with this email already exists"
             )
             
-        hashed_password = self.get_password_hash(user_in.password)
+        hashed_password = get_password_hash(user_in.password)
         generated_username = user_in.username or self.random_username(user_in.email)
         
         create_data = user_in.model_dump(exclude={"password"})
@@ -66,7 +67,7 @@ class UserService:
         update_data = user_in.model_dump(exclude_unset=True)
         
         if "password" in update_data:
-            hashed_password = self.get_password_hash(update_data.pop("password"))
+            hashed_password = get_password_hash(update_data.pop("password"))
             update_data["hashed_password"] = hashed_password
             
         protected_fields = {"id", "email", "last_login", "created_at", "updated_at"}

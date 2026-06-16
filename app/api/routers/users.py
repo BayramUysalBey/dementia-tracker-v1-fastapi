@@ -16,10 +16,10 @@ async def create_user(
 ):
     try:
         return await user_service.create_user(user_in)
+    except HTTPException:
+        raise
     except Exception as e:
-        error_msg = f"{type(e).__name__}: {str(e)}"
-        raise HTTPException(status_code=500, detail=error_msg)
-
+        raise HTTPException(status_code=500, detail="Intenal server error")
 
 @router.get("/me", response_model=UserRead)
 async def read_users_me(
@@ -35,7 +35,7 @@ async def read_users(
 ):
     users = await user_service.get_all_users(skip=skip, limit=limit)
     if not users:
-        return f"the list of objects you're looking for is empty"
+        return []
         
     return list(users)
 

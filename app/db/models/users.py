@@ -16,7 +16,6 @@ if TYPE_CHECKING:
 	from app.db.models.journal import Journal
 
 class UserRole(str, Enum):
-	__tablename__: str = "usersrole"
 	CAREGIVER = "caregiver"
 	PATIENT = "patient"
 	FAMILY = "family"

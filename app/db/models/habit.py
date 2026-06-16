@@ -27,4 +27,4 @@ class Habit(BaseDBModel, TimestampMixin):
 	user: Mapped["User"] = relationship("User", back_populates="habits")
 	name: Mapped[str] = mapped_column(String(255))
 	target_frequency: Mapped[str] = mapped_column(String(255))
-	streak_count: Mapped[str] = mapped_column(Integer())
+	streak_count: Mapped[int] = mapped_column(Integer())
