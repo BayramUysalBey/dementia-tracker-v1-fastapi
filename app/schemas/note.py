@@ -20,7 +20,11 @@ class NoteCreate(NoteBase):
     
 
 class NoteUpdate(BaseModel):
-    pass
+    title: str | None = None
+    content: str | None = None
+    category: NoteType | None = None
+    type: NoteType | None = None
+    is_checklist: bool | None = None
     
     
 class NoteRead(NoteBase):

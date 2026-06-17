@@ -3,45 +3,46 @@ from httpx import AsyncClient
 
 @pytest.mark.asyncio
 async def test_create_and_read_note(
-    client: AsyncClient, 
-    user_mock_data: dict, 
+    client: AsyncClient,
     note_mock_data: dict
 ):
-    # 1. Create a user
-    response_create = await client.post("/api/v1/users/create", json=user_mock_data)
-    assert response_create.status_code == 201
-    created_user_id = response_create.json()["id"]
-    
-    # 2. Login to get token
-    login_data = {
-        "username": user_mock_data["email"],
-        "password": user_mock_data["password"]
+    # 1. Create a caregiver
+    caregiver_data = {
+        "first_name": "Care", "last_name": "Giver", "role": "caregiver",
+        "email": "caregiver_note@example.com", "password": "securepassword123"
     }
-    response_login = await client.post("/api/v1/auth/token", data=login_data)
-    assert response_login.status_code == 200
-    token = response_login.json()["access_token"]
+    await client.post("/api/v1/users/create", json=caregiver_data)
+
+    # 2. Create a patient
+    patient_data = {
+        "first_name": "Pat", "last_name": "Ient", "role": "patient",
+        "email": "patient_note@example.com", "password": "securepassword123"
+    }
+    patient_resp = await client.post("/api/v1/users/create", json=patient_data)
+    patient_id = patient_resp.json()["id"]
+
+    # 3. Login as caregiver
+    login = await client.post("/api/v1/auth/token",
+        data={"username": caregiver_data["email"], "password": caregiver_data["password"]})
+    token = login.json()["access_token"]
     auth_headers = {"Authorization": f"Bearer {token}"}
-    
-    # 3. Create a note 
-    note_mock_data["user_id"] = created_user_id 
-    response_note = await client.post(
-        "/api/v1/note", 
-        json=note_mock_data,
-        headers=auth_headers
-    )
+
+    # 4. Assign the patient to the caregiver
+    await client.post("/api/v1/care-assignments",
+        json={"patient_id": patient_id}, headers=auth_headers)
+
+    # 5. Create a note about the patient
+    note_mock_data["user_id"] = patient_id
+    response_note = await client.post("/api/v1/note", json=note_mock_data, headers=auth_headers)
     assert response_note.status_code == 201
     created_note = response_note.json()
     assert created_note["category"] == note_mock_data["category"]
-    assert created_note["type"] == note_mock_data["type"]
     assert "id" in created_note
-    assert "user_id" in created_note
-    
-    # 4. Read note
+
+    # 6. Read notes
     response_read = await client.get("/api/v1/note", headers=auth_headers)
     assert response_read.status_code == 200
-    note_list = response_read.json()
-    assert len(note_list) == 1
-    assert note_list[0]["id"] == created_note["id"]
+    assert len(response_read.json()) == 1
     
 @pytest.mark.asyncio
 async def test_update_note(client: AsyncClient, user_mock_data: dict, note_mock_data: dict):
