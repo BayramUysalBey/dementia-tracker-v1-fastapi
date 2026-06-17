@@ -25,7 +25,12 @@ class EmergencyContactsCRUD:
         for field, value in obj_in.items():
             if hasattr(db_object, field):
                 setattr(db_object, field, value)
+        await self.db.flush()
         return db_object
+
+    async def get_emergency_contact_by_id(self, contact_id: uuid.UUID) -> EmergencyContact | None:
+        result = await self.db.execute(select(EmergencyContact).where(EmergencyContact.id == contact_id))
+        return result.scalars().first()
     
     async def list_all(self, skip: int = 0, limit: int = 100) -> Sequence[EmergencyContact]:
         result = await self.db.execute(select(EmergencyContact).offset(skip).limit(limit))

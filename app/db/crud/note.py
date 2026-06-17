@@ -1,7 +1,7 @@
 import uuid
 from typing import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from app.db.models.note import Note
 from app.db.session import get_db
 from fastapi import Depends
@@ -18,14 +18,19 @@ class NoteCRUD:
         return db_object
 
     async def note_for_user(self, user_id: uuid.UUID, skip: int = 0, limit: int = 100) -> Sequence[Note]:
-        result = await self.db.execute(select(Note).where(Note.user_id == user_id).offset(skip).limit(limit))
+        result = await self.db.execute(
+            select(Note)
+            .where(or_(Note.author_id == user_id, Note.user_id == user_id)) # combine these two conditions with SQL OR" function
+            .offset(skip)
+            .limit(limit)
+        )
         return result.scalars().all()
 
     async def update_note(self, db_object: Note, obj_in: dict) -> Note:
         for field, value in obj_in.items():
             if hasattr(db_object, field):
                 setattr(db_object, field, value)
-                await self.db.flush()
+        await self.db.flush()
         return db_object
     
     async def list_all(self, skip: int = 0, limit: int = 100) -> Sequence[Note]:

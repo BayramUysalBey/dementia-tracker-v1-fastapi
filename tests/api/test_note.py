@@ -45,15 +45,36 @@ async def test_create_and_read_note(
     assert len(response_read.json()) == 1
     
 @pytest.mark.asyncio
-async def test_update_note(client: AsyncClient, user_mock_data: dict, note_mock_data: dict):
-    response_create = await client.post("/api/v1/users/create", json=user_mock_data)
-    created_user_id = response_create.json()["id"]
-    login_data = {"username": user_mock_data["email"], "password": user_mock_data["password"]}
+async def test_update_note(client: AsyncClient, note_mock_data: dict):
+    # 1. Create a caregiver
+    caregiver_data = {
+        "first_name": "Care", "last_name": "Giver", "role": "caregiver",
+        "email": "caregiver_update_note@example.com", "password": "securepassword123"
+    }
+    await client.post("/api/v1/users/create", json=caregiver_data)
+
+    # 2. Create a patient
+    patient_data = {
+        "first_name": "Pat", "last_name": "Ient", "role": "patient",
+        "email": "patient_update_note@example.com", "password": "securepassword123"
+    }
+    patient_resp = await client.post("/api/v1/users/create", json=patient_data)
+    patient_id = patient_resp.json()["id"]
+
+    # 3. Login as caregiver
+    login_data = {"username": caregiver_data["email"], "password": caregiver_data["password"]}
     response_login = await client.post("/api/v1/auth/token", data=login_data)
     token = response_login.json()["access_token"]
     auth_headers = {"Authorization": f"Bearer {token}"}
-    note_mock_data["user_id"] = created_user_id
+
+    # 4. Assign the patient to the caregiver
+    await client.post("/api/v1/care-assignments",
+        json={"patient_id": patient_id}, headers=auth_headers)
+
+    # 5. Create a note about the patient
+    note_mock_data["user_id"] = patient_id
     create_response = await client.post("/api/v1/note", json=note_mock_data, headers=auth_headers)
+    assert create_response.status_code == 201
     note_id = create_response.json()["id"]
     update_data = {
         "title": "Updated Meeting Notes",

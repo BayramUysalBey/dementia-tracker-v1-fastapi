@@ -1,7 +1,7 @@
 import uuid
 from typing import Optional, TYPE_CHECKING
 from sqlalchemy import String, ForeignKey, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base_model import BaseDBModel
 from app.db.mixins import TimestampMixin
 from datetime import datetime
@@ -26,6 +26,7 @@ class Reminder(BaseDBModel, TimestampMixin):
 		index=True
 	)	
 	user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
+	user: Mapped["User"] = relationship("User", back_populates="reminders")
 	related_entity_id: Mapped[uuid.UUID] = mapped_column(index=True, nullable=False)
 	related_entity_type: Mapped[ReminderType] = mapped_column(String(255))
 	date:Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)

@@ -14,6 +14,7 @@ if TYPE_CHECKING:
 	from app.db.models.habit import Habit
 	from app.db.models.medication import Medication
 	from app.db.models.journal import Journal
+	from app.db.models.reminder import Reminder
 
 class UserRole(str, Enum):
 	CAREGIVER = "caregiver"
@@ -58,3 +59,4 @@ class User(BaseDBModel, TimestampMixin):
 	medications: Mapped[List["Medication"]] = relationship("Medication", back_populates="user")
 	journals_as_patient: Mapped[List["Journal"]] = relationship("Journal", foreign_keys="[Journal.user_id]", back_populates="user")
 	journals_as_author: Mapped[List["Journal"]] = relationship("Journal", foreign_keys="[Journal.author_id]", back_populates="author")
+	reminders: Mapped[List["Reminder"]] = relationship("Reminder", back_populates="user")

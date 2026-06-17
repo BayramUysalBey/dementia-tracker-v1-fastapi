@@ -16,7 +16,7 @@ async def create_journal(
     journal_service: JournalService = Depends(JournalService),
     current_user: User = Depends(get_current_user)
     ):
-    return await journal_service.create_journal(journal_in, user_id=current_user.id)
+    return await journal_service.create_journal(journal_in, current_user_id=current_user.id)
 
 
 @router.get("", response_model=List[JournalRead])

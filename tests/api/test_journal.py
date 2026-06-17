@@ -4,30 +4,44 @@ import uuid
 
 @pytest.mark.asyncio
 async def test_create_and_read_journal(
-    client: AsyncClient, 
-    user_mock_data: dict, 
+    client: AsyncClient,
     journal_mock_data: dict
 ):
-    # 1. Create a user
-    response_create = await client.post("/api/v1/users/create", json=user_mock_data)
-    assert response_create.status_code == 201
-    created_user_id = response_create.json()["id"]
-    
-    # 2. Login to get token
+    # 1. Create a caregiver
+    caregiver_data = {
+        "first_name": "Care", "last_name": "Giver", "role": "caregiver",
+        "email": "caregiver_journal@example.com", "password": "securepassword123"
+    }
+    await client.post("/api/v1/users/create", json=caregiver_data)
+
+    # 2. Create a patient
+    patient_data = {
+        "first_name": "Pat", "last_name": "Ient", "role": "patient",
+        "email": "patient_journal@example.com", "password": "securepassword123"
+    }
+    patient_resp = await client.post("/api/v1/users/create", json=patient_data)
+    assert patient_resp.status_code == 201
+    patient_id = patient_resp.json()["id"]
+
+    # 3. Login as caregiver
     login_data = {
-        "username": user_mock_data["email"],
-        "password": user_mock_data["password"]
+        "username": caregiver_data["email"],
+        "password": caregiver_data["password"]
     }
     response_login = await client.post("/api/v1/auth/token", data=login_data)
     assert response_login.status_code == 200
     token = response_login.json()["access_token"]
     auth_headers = {"Authorization": f"Bearer {token}"}
-    
-    # 3. Create an journal
-    journal_mock_data["user_id"] = created_user_id 
-    
+
+    # 4. Assign the patient to the caregiver
+    await client.post("/api/v1/care-assignments",
+        json={"patient_id": patient_id}, headers=auth_headers)
+
+    # 5. Create a journal about the patient
+    journal_mock_data["user_id"] = patient_id
+
     response_journal = await client.post(
-        "/api/v1/journal", 
+        "/api/v1/journal",
         json=journal_mock_data,
         headers=auth_headers
     )

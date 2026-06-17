@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends, status
 from app.schemas.users import UserRead, UserCreate, UserUpdate
-from app.db.models.users import User
+from app.db.models.users import User, UserRole
 from app.services.users import UserService
 from app.api.deps import get_current_user
 
@@ -39,6 +39,11 @@ async def read_users(
     user_service: UserService = Depends(UserService),
     current_user: User = Depends(get_current_user)
 ):
+    if current_user.role != UserRole.CAREGIVER:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only caregivers can list all users"
+        )
     users = await user_service.get_all_users(skip=skip, limit=limit)
     if not users:
         return []
