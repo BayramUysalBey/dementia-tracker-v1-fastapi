@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import field_validator
 
 class Settings(BaseSettings):
+    DEBUG: bool = False
     VERSION: str = "1.0.0"
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
     DATABASE_URL: str = ""
@@ -19,6 +20,13 @@ class Settings(BaseSettings):
     WEB_URL_HABIT: str = ""
     
     MEDIA_UPLOAD_DIR: str = "static/uploads/media"
+
+    @field_validator("SECRET_KEY")
+    @classmethod
+    def check_secret_key(cls, v: str) -> str:
+        if len(v) < 32:
+            raise ValueError("SECRET_KEY is missing or too short (min 32 characters).")
+        return v
     
     @field_validator("DATABASE_URL")
     @classmethod
@@ -29,6 +37,12 @@ class Settings(BaseSettings):
                 "(like Railway, Render, etc.), you MUST set the DATABASE_URL environment "
                 "variable in their dashboard. The .env file is NOT uploaded to the cloud."
             )
+        if v.startswith('"') or v.startswith("'"):
+            raise ValueError(
+                        "DATABASE_URL should NOT start with quotation marks. "
+                        "Remove the quotes from your environment variables in your cloud dashboard."
+                    )
+        
         if v.startswith("postgres://"):
             v = v.replace("postgres://", "postgresql+asyncpg://", 1)
         elif v.startswith("postgresql://") and not v.startswith("postgresql+asyncpg://"):
@@ -37,11 +51,7 @@ class Settings(BaseSettings):
         if "sslmode=require" in v:
             v = v.replace("sslmode=require", "ssl=require")
             
-        if v.startswith('"') or v.startswith("'"):
-            raise ValueError(
-                "DATABASE_URL should NOT start with quotation marks. "
-                "Remove the quotes from your environment variables in your cloud dashboard."
-            )
+        
         return v
     
 settings = Settings()
