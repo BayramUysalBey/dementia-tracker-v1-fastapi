@@ -2,7 +2,6 @@ import uuid
 import secrets
 from string import ascii_lowercase, digits
 from typing import Sequence
-from passlib.context import CryptContext
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi import HTTPException, status, Depends
 from app.db.session import get_db
