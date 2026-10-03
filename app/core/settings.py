@@ -7,7 +7,6 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
     DATABASE_URL: str = ""
     TEST_DB_NAME: str = ""
-    API_KEY: str = ""
     SECRET_KEY: str = ""
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
@@ -51,7 +50,10 @@ class Settings(BaseSettings):
         if "sslmode=require" in v:
             v = v.replace("sslmode=require", "ssl=require")
             
-        
+        if "channel_binding=require" in v:
+            v = v.replace("&channel_binding=require", "")
+            v = v.replace("channel_binding=require&", "")
+            v = v.replace("?channel_binding=require", "")
         return v
     
 settings = Settings()
