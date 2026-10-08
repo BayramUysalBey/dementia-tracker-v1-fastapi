@@ -3,7 +3,7 @@ from pydantic import field_validator
 
 class Settings(BaseSettings):
     DEBUG: bool = False
-    VERSION: str = "1.0.0"
+    VERSION: str = "1.1.0"
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
     DATABASE_URL: str = ""
     TEST_DB_NAME: str = ""

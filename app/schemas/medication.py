@@ -2,6 +2,7 @@ import uuid
 from pydantic import BaseModel, ConfigDict, Field
 from datetime import datetime
 from app.db.models.medication import MedicationType
+from app.db.models.enums import RecordStatus
 
 class MedicationBase(BaseModel):  
     medication_type: MedicationType | None = None
@@ -16,13 +17,15 @@ class MedicationUpdate(BaseModel):
     medication_name: str | None = None
     dosage: str | None = None
     prescription_date: datetime | None = None
+    status: RecordStatus | None = None
     
 class MedicationRead(MedicationBase):
+    model_config = ConfigDict(from_attributes=True)
     id: uuid.UUID
     user_id: uuid.UUID | None = None
     medication_type: MedicationType | None = None
     medication_name: str | None = None
     dosage: str | None = None
     prescription_date: datetime | None = None
-    model_config = ConfigDict(from_attributes=True)
+    status: RecordStatus
     
