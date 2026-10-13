@@ -22,6 +22,13 @@ class JournalService:
         from app.db.crud.users import UserCRUD
         from app.db.crud.care_assignment import CareAssignmentCRUD
         from app.services.care_assignment import CareAssignmentService
+        # Records are authored by a caregiver about a patient. A user may not
+        # write a record about themselves — provenance matters for clinical reporting.
+        if create_in.user_id == current_user_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Records must be authored by a caregiver, not by the patient"
+            )
         user_crud = UserCRUD(self.db)
         patient = await user_crud.get_by_id(create_in.user_id)
         if not patient:
