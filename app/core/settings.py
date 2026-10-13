@@ -11,9 +11,6 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     SENTRY_DSN: str | None = None
-    BASE_URL: str = ""
-    BASE_URL_FRONT_ONE: str = ""
-    BASE_URL_FRONT_TWO: str = ""
     WEB_URL_TOKEN: str = ""
     WEB_URL_CREATE: str = ""
     WEB_URL_HABIT: str = ""

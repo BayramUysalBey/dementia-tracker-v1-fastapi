@@ -13,15 +13,16 @@ class NoteService:
     def __init__(
         self, 
         db: AsyncSession = Depends(get_db), 
-        crud: NoteCRUD = Depends(NoteCRUD)
-    ):
+        crud: NoteCRUD = Depends(NoteCRUD)):
         self.db = db
         self.crud = crud
         
     async def create_note(self, create_in: NoteCreate, current_user_id: uuid.UUID) -> Note:
-        from app.db.crud.users import UserCRUD # keeping it local makes the dependency explicit and safe
-        from app.db.crud.care_assignment import CareAssignmentCRUD # avoids circular imports between services
-        from app.services.care_assignment import CareAssignmentService # avoids circular imports between services
+        # Imported inside the function: app.services.care_assignment imports from
+        # this module, so a top-level import would be circular.
+        from app.db.crud.users import UserCRUD
+        from app.db.crud.care_assignment import CareAssignmentCRUD
+        from app.services.care_assignment import CareAssignmentService
         user_crud = UserCRUD(self.db)
         patient = await user_crud.get_by_id(create_in.user_id)
         if not patient:
@@ -47,7 +48,7 @@ class NoteService:
     async def get_all_note(self, user_id: uuid.UUID, skip: int = 0, limit: int = 1000) -> Sequence[Note]:
         return await self.crud.note_for_user(user_id=user_id, skip=skip, limit=limit)
     
-    async def update_note(self, note_id: uuid.UUID, user_id: uuid.UUID, user_in: NoteUpdate):
+    async def update_note(self, note_id: uuid.UUID, user_id: uuid.UUID, user_in: NoteUpdate) -> Note:
         db_object = await self.crud.get_note_by_id(note_id)
         if not db_object or db_object.author_id != user_id:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Note not found")

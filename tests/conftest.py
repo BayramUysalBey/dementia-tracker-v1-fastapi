@@ -155,9 +155,8 @@ async def authenticated_client(client: AsyncClient):
     )
     app.dependency_overrides[get_current_user] = lambda: dummy_user
     yield client
-    app.dependency_overrides.clear()
+    app.dependency_overrides.pop(get_current_user, None)
     
-import tempfile
 
 @pytest.fixture(autouse=True)
 def override_upload_dir():

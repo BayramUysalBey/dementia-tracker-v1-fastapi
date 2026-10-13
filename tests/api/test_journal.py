@@ -67,3 +67,47 @@ async def test_create_journal_unauthorized(client: AsyncClient, journal_mock_dat
     assert response.status_code == 401
     error_response = response.json()
     assert error_response["detail"] == "Not authenticated"
+
+
+@pytest.mark.asyncio
+async def test_cannot_create_journal_for_unassigned_patient(
+    client: AsyncClient,
+    journal_mock_data: dict
+):
+    # 1. A caregiver registers
+    caregiver_data = {
+        "first_name": "Care", "last_name": "Giver", "role": "caregiver",
+        "email": "unassigned_caregiver@example.com", "password": "securepassword123"
+    }
+    await client.post("/api/v1/users/create", json=caregiver_data)
+
+    # 2. An unrelated patient registers
+    patient_data = {
+        "first_name": "Pat", "last_name": "Ient", "role": "patient",
+        "email": "unassigned_patient@example.com", "password": "securepassword123"
+    }
+    patient_resp = await client.post("/api/v1/users/create", json=patient_data)
+    assert patient_resp.status_code == 201
+    patient_id = patient_resp.json()["id"]
+
+    # 3. The caregiver logs in
+    login_data = {
+        "username": caregiver_data["email"],
+        "password": caregiver_data["password"]
+    }
+    response_login = await client.post("/api/v1/auth/token", data=login_data)
+    assert response_login.status_code == 200
+    token = response_login.json()["access_token"]
+    auth_headers = {"Authorization": f"Bearer {token}"}
+
+    # 4. The caregiver tries to write into this patient's journal anyway
+    journal_mock_data["user_id"] = patient_id
+    response = await client.post(
+        "/api/v1/journal",
+        json=journal_mock_data,
+        headers=auth_headers
+    )
+
+    # 5. verify_caregiver_access must refuse
+    assert response.status_code == 403
+    assert response.json()["detail"] == "You are not assigned to this patient"

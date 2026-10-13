@@ -5,6 +5,7 @@ from app.schemas.journal import JournalCreate, JournalRead, JournalUpdate
 from app.services.journal import JournalService
 from app.api.deps import get_current_user
 from app.db.models.users import User
+from fastapi import Query
 
 
 router = APIRouter()
@@ -22,14 +23,11 @@ async def create_journal(
 @router.get("", response_model=List[JournalRead])
 async def read_journal(
     skip: int = 0, 
-    limit: int = 100,
+    limit: int = Query(100, ge=1, le=100),
     journal_service: JournalService = Depends(JournalService),
     current_user: User = Depends(get_current_user)
 ):
-    journals = await journal_service.get_all_journal(user_id=current_user.id, skip=skip, limit=limit)
-    if not journals:
-        return []
-        
+    journals = await journal_service.get_all_journal(user_id=current_user.id, skip=skip, limit=limit)       
     return list(journals)
 
 
