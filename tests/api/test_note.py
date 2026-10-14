@@ -1,6 +1,7 @@
 import pytest
 from httpx import AsyncClient
 
+
 @pytest.mark.asyncio
 async def test_create_and_read_note(
     client: AsyncClient,
@@ -43,7 +44,8 @@ async def test_create_and_read_note(
     response_read = await client.get("/api/v1/note", headers=auth_headers)
     assert response_read.status_code == 200
     assert len(response_read.json()) == 1
-    
+
+
 @pytest.mark.asyncio
 async def test_update_note(client: AsyncClient, note_mock_data: dict):
     # 1. Create a caregiver
@@ -76,30 +78,30 @@ async def test_update_note(client: AsyncClient, note_mock_data: dict):
     create_response = await client.post("/api/v1/note", json=note_mock_data, headers=auth_headers)
     assert create_response.status_code == 201
     note_id = create_response.json()["id"]
+
     update_data = {
         "title": "Updated Meeting Notes",
         "content": "The patient is doing much better today."
     }
     response = await client.patch(f"/api/v1/note/{note_id}", json=update_data, headers=auth_headers)
-    
+
     assert response.status_code == 200
     assert response.json()["title"] == "Updated Meeting Notes"
     assert response.json()["content"] == "The patient is doing much better today."
 
-    
 
-@pytest.mark.asyncio  
+@pytest.mark.asyncio
 async def test_create_note_unauthorized(client: AsyncClient, note_mock_data: dict):
     response = await client.post("/api/v1/note", json=note_mock_data)
     assert response.status_code == 401
     error_response = response.json()
     assert error_response["detail"] == "Not authenticated"
-    
 
-@pytest.mark.asyncio  
+
+@pytest.mark.asyncio
 async def test_create_note_invalid_title(
-    client: AsyncClient, 
-    user_mock_data: dict, 
+    client: AsyncClient,
+    user_mock_data: dict,
     note_mock_data: dict
 ):
     response_create = await client.post("/api/v1/users/create", json=user_mock_data)
@@ -116,7 +118,7 @@ async def test_create_note_invalid_title(
     bad_data["user_id"] = response_create.json()["id"]
 
     response = await client.post(
-        "/api/v1/note", 
+        "/api/v1/note",
         json=bad_data,
         headers=auth_headers
     )
@@ -156,7 +158,7 @@ async def test_cannot_create_note_for_unassigned_patient(
     token = response_login.json()["access_token"]
     auth_headers = {"Authorization": f"Bearer {token}"}
 
-    # 4. The caregiver tries to write into this patient's note anyway
+    # 4. No care assignment is created — the caregiver writes anyway
     note_mock_data["user_id"] = patient_id
     response = await client.post(
         "/api/v1/note",
@@ -167,3 +169,40 @@ async def test_cannot_create_note_for_unassigned_patient(
     # 5. verify_caregiver_access must refuse
     assert response.status_code == 403
     assert response.json()["detail"] == "You are not assigned to this patient"
+
+
+@pytest.mark.asyncio
+async def test_cannot_create_note_about_self(
+    client: AsyncClient,
+    note_mock_data: dict
+):
+    # 1. A caregiver registers — keep the id from the response
+    caregiver_data = {
+        "first_name": "Care", "last_name": "Giver", "role": "caregiver",
+        "email": "self_author_note@example.com", "password": "securepassword123"
+    }
+    response_create = await client.post("/api/v1/users/create", json=caregiver_data)
+    assert response_create.status_code == 201
+    caregiver_id = response_create.json()["id"]
+
+    # 2. They log in
+    login_data = {
+        "username": caregiver_data["email"],
+        "password": caregiver_data["password"]
+    }
+    response_login = await client.post("/api/v1/auth/token", data=login_data)
+    assert response_login.status_code == 200
+    token = response_login.json()["access_token"]
+    auth_headers = {"Authorization": f"Bearer {token}"}
+
+    # 3. They try to write a note about THEMSELVES
+    note_mock_data["user_id"] = caregiver_id
+    response = await client.post(
+        "/api/v1/note",
+        json=note_mock_data,
+        headers=auth_headers
+    )
+
+    # 4. The self-authoring guard must refuse
+    assert response.status_code == 403
+    assert response.json()["detail"] == "Records must be authored by a caregiver, not by the patient"

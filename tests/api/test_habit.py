@@ -52,10 +52,10 @@ async def test_update_habit(client: AsyncClient, user_mock_data: dict, habit_moc
 	auth_headers = {"Authorization": f"Bearer {token}"}    
 	create_response = await client.post("/api/v1/habit", json=habit_mock_data, headers=auth_headers)
 	habit_id = create_response.json()["id"]
-	update_data = {"streak_count": 4}
+	update_data = {"target_frequency": "Twice daily"}
 	response = await client.patch(f"/api/v1/habit/{habit_id}", json=update_data, headers=auth_headers)
 	assert response.status_code == 200
-	assert response.json()["streak_count"] == 4
+	assert response.json()["target_frequency"] == "Twice daily"
     
 
 @pytest.mark.asyncio  
@@ -123,3 +123,33 @@ async def test_discontinue_habit_keeps_record(
     assert len(habit_list) == 1
     assert habit_list[0]["id"] == habit_id
     assert habit_list[0]["status"] == "discontinued"
+
+
+
+@pytest.mark.asyncio
+async def test_cannot_set_streak_count_via_update(
+    client: AsyncClient,
+    user_mock_data: dict,
+    habit_mock_data: dict
+):
+    await client.post("/api/v1/users/create", json=user_mock_data)
+    login_data = {
+        "username": user_mock_data["email"],
+        "password": user_mock_data["password"]
+    }
+    response_login = await client.post("/api/v1/auth/token", data=login_data)
+    token = response_login.json()["access_token"]
+    auth_headers = {"Authorization": f"Bearer {token}"}
+
+    create_response = await client.post(
+        "/api/v1/habit", json=habit_mock_data, headers=auth_headers
+    )
+    habit_id = create_response.json()["id"]
+
+    response = await client.patch(
+        f"/api/v1/habit/{habit_id}",
+        json={"streak_count": 4},
+        headers=auth_headers,
+    )
+    assert response.status_code == 422
+    assert response.json()["detail"][0]["loc"] == ["body", "streak_count"]

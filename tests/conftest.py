@@ -125,8 +125,7 @@ def reminder_mock_data():
 def habit_mock_data():
     return {
 		"name": "Mom book",
-        "target_frequency": "Daily",
-        "streak_count": 3
+        "target_frequency": "Daily"
 	}
 
 @pytest.fixture
