@@ -1,5 +1,5 @@
 import uuid
-from typing import TYPE_CHECKING
+from typing import Optional, TYPE_CHECKING
 from sqlalchemy import String, ForeignKey, Integer
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.db.base_model import BaseDBModel
@@ -19,8 +19,12 @@ class Habit(BaseDBModel, TimestampMixin):
 		default=uuid.uuid4,
 		index=True
 	)	
-	user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-	user: Mapped["User"] = relationship("User", back_populates="habits")
+	user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False) # Patient account deleted → their habits go with them. 
+	                                                                                                       # The record was *about* them.
+                                                                                                           # Caregiver account deleted → the habits **survive**, author becomes unknown.
+	user: Mapped["User"] = relationship("User", foreign_keys=[user_id], back_populates="habits")           # The patient's record shouldn't vanish because a caregiver left.
+	author_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
+	author: Mapped[Optional["User"]] = relationship("User", foreign_keys=[author_id], back_populates="habits_as_author")
 	name: Mapped[str] = mapped_column(String(255))
 	target_frequency: Mapped[str] = mapped_column(String(255))
 	streak_count: Mapped[int] = mapped_column(Integer(), default=0)
