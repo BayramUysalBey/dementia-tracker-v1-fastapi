@@ -29,8 +29,6 @@ class Medication(BaseDBModel, TimestampMixin):
 	)
 	user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
 	user: Mapped[Optional["User"]] = relationship(back_populates="medications")
-	author_id: Mapped[uuid.UUID | None] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True)
-	author: Mapped[Optional["User"]] = relationship("User", foreign_keys=[author_id], back_populates="medications_as_author")
 	medication_type: Mapped[MedicationType] = mapped_column(SAEnum(MedicationType, name="medication_type", values_callable=lambda enum_cls: [e.value for e in enum_cls]))  
 	medication_name: Mapped[str] = mapped_column(String(255))
 	dosage: Mapped[str] = mapped_column(String(255))
