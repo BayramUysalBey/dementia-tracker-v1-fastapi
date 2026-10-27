@@ -57,6 +57,8 @@ class JournalService:
     async def update_journal(self, journal_id: uuid.UUID, user_id: uuid.UUID, user_in: JournalUpdate) -> Journal:
         db_object = await self.crud.get_journal_by_id(journal_id)
         if not db_object or db_object.author_id != user_id:
+        # Only the author may edit an entry. The subject can read their record
+        # (see JournalCRUD.journal_for_user) but not alter what a caregiver wrote.
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Journal not found")
         update_data = user_in.model_dump(exclude_unset=True)
         updated_journal = await self.crud.update_journal(db_object, update_data)

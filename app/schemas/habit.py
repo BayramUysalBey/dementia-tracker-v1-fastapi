@@ -10,12 +10,16 @@ class HabitBase(BaseModel):
 
 
 class HabitCreate(HabitBase):
+    user_id: uuid.UUID
     model_config = ConfigDict(extra="forbid")
 
 
 class HabitUpdate(BaseModel):
-    model_config = ConfigDict(extra="forbid")   # extra="forbid"` means a client sending a field you later 
-                                                # removed gets a hard failure rather than being quietly tolerated.
+    # Unknown fields are rejected: a PATCH that silently ignored one would
+    # return 200 for a change it never made.
+    # user_id is deliberately absent: changing it would move the habit to
+    # another patient without the care-assignment check that create enforces.   
+    model_config = ConfigDict(extra="forbid")   
     name: str | None = None
     target_frequency: str | None = None
     status: RecordStatus | None = None
@@ -23,6 +27,7 @@ class HabitUpdate(BaseModel):
 
 class HabitRead(HabitBase):
     model_config = ConfigDict(from_attributes=True)
+    author_id: uuid.UUID | None
     id: uuid.UUID
     user_id: uuid.UUID
     streak_count: int

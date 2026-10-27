@@ -5,7 +5,6 @@ from sqlalchemy import select, or_
 from app.db.models.journal import Journal
 from app.db.session import get_db
 from fastapi import Depends
-from fastapi import Query
 
 
 class JournalCRUD:
@@ -18,7 +17,7 @@ class JournalCRUD:
         await self.db.flush()
         return db_object
 
-    async def journal_for_user(self, user_id: uuid.UUID, skip: int = 0, limit: int = Query(100, ge=1, le=100),) -> Sequence[Journal]:
+    async def journal_for_user(self, user_id: uuid.UUID, skip: int = 0, limit: int = 100) -> Sequence[Journal]:
         result = await self.db.execute(
             select(Journal)
             .where(or_(Journal.author_id == user_id, Journal.user_id == user_id))
@@ -27,8 +26,6 @@ class JournalCRUD:
         )
         return result.scalars().all()
 
-    # Only the author may edit an entry. The subject can read their record
-    # (see JournalCRUD.journal_for_user) but not alter what a caregiver wrote.
     async def update_journal(self, db_object: Journal, obj_in: dict) -> Journal:
         for field, value in obj_in.items():
             if hasattr(db_object, field):
@@ -36,7 +33,7 @@ class JournalCRUD:
         await self.db.flush()
         return db_object
     
-    async def list_all(self, skip: int = 0, limit: int = Query(100, ge=1, le=100),) -> Sequence[Journal]:
+    async def list_all(self, skip: int = 0, limit: int = 100) -> Sequence[Journal]:
         result = await self.db.execute(select(Journal).offset(skip).limit(limit))
         return result.scalars().all()
     
