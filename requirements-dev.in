@@ -1,0 +1,8 @@
+-c requirements.txt
+
+pytest
+pytest-asyncio
+pytest-cov
+sphinx
+pip-tools
+pip-audit
