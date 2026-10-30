@@ -127,3 +127,84 @@ async def test_cannot_set_streak_count_via_update(
     )
     assert response.status_code == 422
     assert response.json()["detail"][0]["loc"] == ["body", "streak_count"]
+
+
+@pytest.mark.asyncio
+async def test_cannot_create_habit_for_unassigned_patient(
+    client: AsyncClient,
+    habit_mock_data: dict
+):
+    # 1. A caregiver registers
+    caregiver_data = {
+        "first_name": "Care", "last_name": "Giver", "role": "caregiver",
+        "email": "unassigned_caregiver_habit@example.com", "password": "securepassword123"
+    }
+    await client.post("/api/v1/users/create", json=caregiver_data)
+
+    # 2. An unrelated patient registers
+    patient_data = {
+        "first_name": "Pat", "last_name": "Ient", "role": "patient",
+        "email": "unassigned_patient_habit@example.com", "password": "securepassword123"
+    }
+    patient_resp = await client.post("/api/v1/users/create", json=patient_data)
+    assert patient_resp.status_code == 201
+    patient_id = patient_resp.json()["id"]
+
+    # 3. The caregiver logs in
+    login_data = {
+        "username": caregiver_data["email"],
+        "password": caregiver_data["password"]
+    }
+    response_login = await client.post("/api/v1/auth/token", data=login_data)
+    assert response_login.status_code == 200
+    token = response_login.json()["access_token"]
+    auth_headers = {"Authorization": f"Bearer {token}"}
+
+    # 4. No care assignment is created — the caregiver writes anyway
+    habit_mock_data["user_id"] = patient_id
+    response = await client.post(
+        "/api/v1/habit",
+        json=habit_mock_data,
+        headers=auth_headers
+    )
+
+    # 5. verify_caregiver_access must refuse
+    assert response.status_code == 403
+    assert response.json()["detail"] == "You are not assigned to this patient"
+
+
+@pytest.mark.asyncio
+async def test_cannot_create_habit_about_self(
+    client: AsyncClient,
+    habit_mock_data: dict
+):
+    # 1. A caregiver registers — keep the id from the response
+    caregiver_data = {
+        "first_name": "Care", "last_name": "Giver", "role": "caregiver",
+        "email": "self_author_habit@example.com", "password": "securepassword123"
+    }
+    response_create = await client.post("/api/v1/users/create", json=caregiver_data)
+    assert response_create.status_code == 201
+    caregiver_id = response_create.json()["id"]
+
+    # 2. They log in
+    login_data = {
+        "username": caregiver_data["email"],
+        "password": caregiver_data["password"]
+    }
+    response_login = await client.post("/api/v1/auth/token", data=login_data)
+    assert response_login.status_code == 200
+    token = response_login.json()["access_token"]
+    auth_headers = {"Authorization": f"Bearer {token}"}
+
+    # 3. They try to write a habit about THEMSELVES
+    habit_mock_data["user_id"] = caregiver_id
+    response = await client.post(
+        "/api/v1/habit",
+        json=habit_mock_data,
+        headers=auth_headers
+    )
+
+    # 4. The self-authoring guard must refuse
+    assert response.status_code == 403
+    assert response.json()["detail"] == "Records must be authored by a caregiver, not by the patient"
