@@ -5,28 +5,17 @@ from httpx import AsyncClient
 @pytest.mark.asyncio
 async def test_create_and_read_habit(
     client: AsyncClient, 
-    user_mock_data: dict, 
+    caregiver_with_patient: dict, 
     habit_mock_data: dict
 ):
-    # 1. Create a user
-    response_create = await client.post("/api/v1/users/create", json=user_mock_data)
-    assert response_create.status_code == 201
-    created_user_id = response_create.json()["id"]
-    
-    # 2. Login to get token
-    login_data = {
-        "username": user_mock_data["email"],
-        "password": user_mock_data["password"]
-    }
-    response_login = await client.post("/api/v1/auth/token", data=login_data)
-    assert response_login.status_code == 200
-    token = response_login.json()["access_token"]
-    auth_headers = {"Authorization": f"Bearer {token}"}
-    
-    # 3. Create a habit   
+    auth_headers = caregiver_with_patient["auth_headers"]
+    patient_id = caregiver_with_patient["patient_id"]
+
+    # Create a habit   
+    habit_data = {**habit_mock_data, "user_id": patient_id}
     response_habit = await client.post(
-        "/api/v1/habit", 
-        json=habit_mock_data,
+        "/api/v1/habit",
+        json=habit_data,
         headers=auth_headers
     )
     assert response_habit.status_code == 201
@@ -34,28 +23,28 @@ async def test_create_and_read_habit(
     assert created_habit["target_frequency"] == habit_mock_data["target_frequency"]
     assert created_habit["name"] == habit_mock_data["name"]
     assert "id" in created_habit
-    assert "user_id" in created_habit
+    assert created_habit["user_id"] == patient_id
     
-    # 4. Read habit
+    # Read habit
     response_read = await client.get("/api/v1/habit", headers=auth_headers)
     assert response_read.status_code == 200
     habit_list = response_read.json()
     assert len(habit_list) == 1
     assert habit_list[0]["id"] == created_habit["id"]
-    
+
+
 @pytest.mark.asyncio
-async def test_update_habit(client: AsyncClient, user_mock_data: dict, habit_mock_data: dict):
-	await client.post("/api/v1/users/create", json=user_mock_data)
-	login_data = {"username": user_mock_data["email"], "password": user_mock_data["password"]}
-	response_login = await client.post("/api/v1/auth/token", data=login_data)
-	token = response_login.json()["access_token"]
-	auth_headers = {"Authorization": f"Bearer {token}"}    
-	create_response = await client.post("/api/v1/habit", json=habit_mock_data, headers=auth_headers)
-	habit_id = create_response.json()["id"]
-	update_data = {"target_frequency": "Twice daily"}
-	response = await client.patch(f"/api/v1/habit/{habit_id}", json=update_data, headers=auth_headers)
-	assert response.status_code == 200
-	assert response.json()["target_frequency"] == "Twice daily"
+async def test_update_habit(client: AsyncClient, caregiver_with_patient: dict, habit_mock_data: dict):
+    auth_headers = caregiver_with_patient["auth_headers"]
+    patient_id = caregiver_with_patient["patient_id"]
+    habit_data = {**habit_mock_data, "user_id": patient_id}
+    create_response = await client.post("/api/v1/habit", json=habit_data, headers=auth_headers)
+    assert create_response.status_code == 201
+    habit_id = create_response.json()["id"]
+    update_data = {"target_frequency": "Twice daily"}
+    response = await client.patch(f"/api/v1/habit/{habit_id}", json=update_data, headers=auth_headers)
+    assert response.status_code == 200
+    assert response.json()["target_frequency"] == "Twice daily"
     
 
 @pytest.mark.asyncio  
@@ -68,20 +57,14 @@ async def test_create_habit_unauthorized(client: AsyncClient, habit_mock_data: d
 @pytest.mark.asyncio
 async def test_habit_defaults_to_active(
     client: AsyncClient,
-    user_mock_data: dict,
+    caregiver_with_patient: dict,
     habit_mock_data: dict
 ):
-    await client.post("/api/v1/users/create", json=user_mock_data)
-    login_data = {
-        "username": user_mock_data["email"],
-        "password": user_mock_data["password"]
-    }
-    response_login = await client.post("/api/v1/auth/token", data=login_data)
-    token = response_login.json()["access_token"]
-    auth_headers = {"Authorization": f"Bearer {token}"}
-
+    auth_headers = caregiver_with_patient["auth_headers"]
+    patient_id = caregiver_with_patient["patient_id"]
+    habit_data = {**habit_mock_data, "user_id": patient_id}
     response = await client.post(
-        "/api/v1/habit", json=habit_mock_data, headers=auth_headers
+        "/api/v1/habit", json=habit_data, headers=auth_headers
     )
     assert response.status_code == 201
     # a newly created habit is active without the client sending a status
@@ -91,21 +74,17 @@ async def test_habit_defaults_to_active(
 @pytest.mark.asyncio
 async def test_discontinue_habit_keeps_record(
     client: AsyncClient,
-    user_mock_data: dict,
+    caregiver_with_patient: dict,
     habit_mock_data: dict
 ):
-    await client.post("/api/v1/users/create", json=user_mock_data)
-    login_data = {
-        "username": user_mock_data["email"],
-        "password": user_mock_data["password"]
-    }
-    response_login = await client.post("/api/v1/auth/token", data=login_data)
-    token = response_login.json()["access_token"]
-    auth_headers = {"Authorization": f"Bearer {token}"}
+    auth_headers = caregiver_with_patient["auth_headers"]
+    patient_id = caregiver_with_patient["patient_id"]
+    habit_data = {**habit_mock_data, "user_id": patient_id}
 
     create_response = await client.post(
-        "/api/v1/habit", json=habit_mock_data, headers=auth_headers
+        "/api/v1/habit", json=habit_data, headers=auth_headers
     )
+    assert create_response.status_code == 201
     habit_id = create_response.json()["id"]
 
     response = await client.patch(
@@ -129,21 +108,16 @@ async def test_discontinue_habit_keeps_record(
 @pytest.mark.asyncio
 async def test_cannot_set_streak_count_via_update(
     client: AsyncClient,
-    user_mock_data: dict,
+    caregiver_with_patient: dict,
     habit_mock_data: dict
 ):
-    await client.post("/api/v1/users/create", json=user_mock_data)
-    login_data = {
-        "username": user_mock_data["email"],
-        "password": user_mock_data["password"]
-    }
-    response_login = await client.post("/api/v1/auth/token", data=login_data)
-    token = response_login.json()["access_token"]
-    auth_headers = {"Authorization": f"Bearer {token}"}
-
+    auth_headers = caregiver_with_patient["auth_headers"]
+    patient_id = caregiver_with_patient["patient_id"]
+    habit_data = {**habit_mock_data, "user_id": patient_id}
     create_response = await client.post(
-        "/api/v1/habit", json=habit_mock_data, headers=auth_headers
+        "/api/v1/habit", json=habit_data, headers=auth_headers
     )
+    assert create_response.status_code == 201
     habit_id = create_response.json()["id"]
 
     response = await client.patch(

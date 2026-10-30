@@ -15,6 +15,7 @@ from app.api.deps import get_current_user
 from app.db.models.users import User
 from datetime import datetime, timezone
 import tempfile
+from typing import Literal
 
 
 TEST_DB_NAME = settings.TEST_DB_NAME
@@ -56,6 +57,7 @@ def setup_test_database():
 
     asyncio.run(drop_database())
 
+
 @pytest_asyncio.fixture
 async def client():
     transport = ASGITransport(app=app) # Wrap the app in ASGITransport (httpx version issue and solution)
@@ -84,6 +86,18 @@ def user_mock_data():
         "password": "securepassword123"
     }
 
+
+def make_user_payload(role: Literal["caregiver", "patient", "family", "doctor"]) -> dict:
+    unique_id = str(uuid.uuid4())[:8]
+    return {
+        "first_name": "Simple",
+        "last_name": "User",
+        "role": role,
+        "username": f"{role}_{unique_id}",
+        "email": f"{role}_{unique_id}@example.com",
+        "password": "securepassword123"
+    }
+
 @pytest.fixture
 def emergency_contact_mock_data():
     return {
@@ -99,7 +113,7 @@ def emergency_contact_mock_data():
 def medication_mock_data():
     return {
         "medication_type": "Pill",
-        "medication_name": "Ebixa",
+        "medication_name": "Testamine",
         "dosage": "10 mg"
 	}
 
@@ -155,8 +169,39 @@ async def authenticated_client(client: AsyncClient):
     app.dependency_overrides[get_current_user] = lambda: dummy_user
     yield client
     app.dependency_overrides.pop(get_current_user, None)
-    
 
+
+@pytest_asyncio.fixture
+async def caregiver_with_patient(client: AsyncClient):
+    # 1. Create the caregiver
+    caregiver_data = make_user_payload("caregiver")
+    response = await client.post("/api/v1/users/create", json=caregiver_data)
+    assert response.status_code == 201
+
+    # 2. Create the patient and keep their id
+    patient_data = make_user_payload("patient")
+    response = await client.post("/api/v1/users/create", json=patient_data)
+    assert response.status_code == 201
+    patient_id = response.json()["id"]
+
+    # 3. Log in as the caregiver
+    login_data = {"username": caregiver_data["email"], "password": caregiver_data["password"]}
+    response = await client.post("/api/v1/auth/token", data=login_data)
+    assert response.status_code == 200
+    token = response.json()["access_token"]
+    auth_headers = {"Authorization": f"Bearer {token}"}
+
+    # 4. Assign the patient to the caregiver
+    response = await client.post(
+        "/api/v1/care-assignments",
+        json={"patient_id": patient_id},
+        headers=auth_headers,
+    )
+    assert response.status_code == 201
+
+    return {"auth_headers": auth_headers, "patient_id": patient_id}
+
+    
 @pytest.fixture(autouse=True)
 def override_upload_dir():
     with tempfile.TemporaryDirectory() as temp_dir:
