@@ -208,3 +208,62 @@ async def test_cannot_create_habit_about_self(
     # 4. The self-authoring guard must refuse
     assert response.status_code == 403
     assert response.json()["detail"] == "Records must be authored by a caregiver, not by the patient"
+
+@pytest.mark.asyncio
+async def test_cannot_update_habit_if_not_author(
+    client: AsyncClient,
+    caregiver_with_patient: dict,
+    habit_mock_data: dict
+):
+    # 1. The assigned caregiver (author) creates the habit
+    auth_headers_author = caregiver_with_patient["auth_headers"]
+    patient_id = caregiver_with_patient["patient_id"]
+    habit_data = {**habit_mock_data, "user_id": patient_id}
+
+    create_response = await client.post(
+        "/api/v1/habit", json=habit_data, headers=auth_headers_author
+    )
+    assert create_response.status_code == 201
+    habit_id = create_response.json()["id"]
+
+    # 2. A second caregiver registers
+    other_caregiver_data = {
+        "first_name": "Another", "last_name": "Caregiver", "role": "caregiver",
+        "email": "not_the_author_habit@example.com", "password": "securepassword123"
+    }
+    other_response = await client.post("/api/v1/users/create", json=other_caregiver_data)
+    assert other_response.status_code == 201
+
+    # 3. The second caregiver logs in and is assigned to the same patient,
+    #    so the ONLY difference between the two caregivers is authorship
+    login_data = {
+        "username": other_caregiver_data["email"],
+        "password": other_caregiver_data["password"]
+    }
+    response_login = await client.post("/api/v1/auth/token", data=login_data)
+    assert response_login.status_code == 200
+    other_token = response_login.json()["access_token"]
+    auth_headers_other = {"Authorization": f"Bearer {other_token}"}
+
+    assign_response = await client.post(
+        "/api/v1/care-assignments",
+        json={"patient_id": patient_id},
+        headers=auth_headers_other,
+    )
+    assert assign_response.status_code == 201
+
+    # 4. The second caregiver tries to update the habit they didn't author
+    response = await client.patch(
+        f"/api/v1/habit/{habit_id}",
+        json={"target_frequency": "Never"},
+        headers=auth_headers_other,
+    )
+
+    # 5. The server refuses (404: it doesn't confirm the record exists)
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Habit not found"
+
+    # 6. The data is unchanged: read as the author, the value is still the original
+    read_response = await client.get("/api/v1/habit", headers=auth_headers_author)
+    assert read_response.status_code == 200
+    assert read_response.json()[0]["target_frequency"] == "Daily"
