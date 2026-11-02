@@ -25,6 +25,10 @@ class UserCRUD:
         result = await self.db.execute(select(User).where(User.email == email))
         return result.scalar_one_or_none()
 
+    async def get_by_username(self, username: str) -> User | None:
+        result = await self.db.execute(select(User).where(User.username == username))
+        return result.scalar_one_or_none()
+
     async def list_all(self, skip: int = 0, limit: int = 100) -> Sequence[User]:
         result = await self.db.execute(select(User).offset(skip).limit(limit))
         return result.scalars().all()

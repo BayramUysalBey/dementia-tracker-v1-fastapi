@@ -48,6 +48,17 @@ async def test_create_user_invalid_email(client: AsyncClient):
     response = await client.post("/api/v1/users/create", json=bad_data)
     assert response.status_code == 422 
 
+@pytest.mark.asyncio
+async def test_duplicate_username_returns_400(client: AsyncClient, user_mock_data: dict):
+    # 1. The first user registers normally
+    first_response = await client.post("/api/v1/users/create", json=user_mock_data)
+    assert first_response.status_code == 201
 
+    # 2. A second user: different email, SAME username
+    second_user = {**user_mock_data, "email": "other_" + user_mock_data["email"]}
+    response = await client.post("/api/v1/users/create", json=second_user)
+
+    assert response.status_code == 400
+    assert response.json()["detail"] == "User with this username already exists"
     
 

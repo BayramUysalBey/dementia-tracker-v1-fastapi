@@ -43,7 +43,13 @@ class UserService:
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail="User with this email already exists"
             )
-            
+        if user_in.username:
+            existing_username = await self.crud.get_by_username(user_in.username)
+            if existing_username:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail="User with this username already exists"
+                )
         hashed_password = get_password_hash(user_in.password)
         generated_username = user_in.username or self.random_username(user_in.email)
         
