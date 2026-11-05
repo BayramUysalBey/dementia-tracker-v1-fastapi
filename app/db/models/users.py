@@ -59,7 +59,9 @@ class User(BaseDBModel, TimestampMixin):
 	habits: Mapped[List["Habit"]] = relationship("Habit", foreign_keys="[Habit.user_id]", back_populates="user")
 	habits_as_author: Mapped[list["Habit"]] = relationship(
     "Habit", foreign_keys="[Habit.author_id]", back_populates="author")
-	medications: Mapped[List["Medication"]] = relationship("Medication", back_populates="user")
+	medications: Mapped[List["Medication"]] = relationship("Medication", foreign_keys="[Medication.user_id]", back_populates="user")
+	medications_as_author: Mapped[list["Medication"]] = relationship(
+        "Medication", foreign_keys="[Medication.author_id]", back_populates="author")
 	journals_as_patient: Mapped[List["Journal"]] = relationship("Journal", foreign_keys="[Journal.user_id]", back_populates="user")
 	journals_as_author: Mapped[List["Journal"]] = relationship("Journal", foreign_keys="[Journal.author_id]", back_populates="author")
 	reminders: Mapped[List["Reminder"]] = relationship("Reminder", back_populates="user")

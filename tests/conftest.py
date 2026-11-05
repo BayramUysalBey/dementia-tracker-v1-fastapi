@@ -177,6 +177,7 @@ async def caregiver_with_patient(client: AsyncClient):
     caregiver_data = make_user_payload("caregiver")
     response = await client.post("/api/v1/users/create", json=caregiver_data)
     assert response.status_code == 201
+    caregiver_id = response.json()["id"]
 
     # 2. Create the patient and keep their id
     patient_data = make_user_payload("patient")
@@ -199,7 +200,9 @@ async def caregiver_with_patient(client: AsyncClient):
     )
     assert response.status_code == 201
 
-    return {"auth_headers": auth_headers, "patient_id": patient_id}
+    return {"auth_headers": auth_headers,
+            "patient_id": patient_id,
+            "caregiver_id": caregiver_id}
 
     
 @pytest.fixture(autouse=True)

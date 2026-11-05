@@ -1,7 +1,7 @@
 import uuid
 from typing import Sequence
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, or_
 from app.db.models.medication import Medication
 from app.db.session import get_db
 from fastapi import Depends
@@ -18,7 +18,7 @@ class MedicationCRUD:
         return db_object
 
     async def medication_for_user(self, user_id: uuid.UUID, skip: int = 0, limit: int = 100) -> Sequence[Medication]:
-        result = await self.db.execute(select(Medication).where(Medication.user_id == user_id).offset(skip).limit(limit))
+        result = await self.db.execute(select(Medication).where(or_(Medication.author_id == user_id,Medication.user_id == user_id)).offset(skip).limit(limit))
         return result.scalars().all()
 
     async def update_medication(self, db_object: Medication, obj_in: dict) -> Medication:

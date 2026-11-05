@@ -1,11 +1,10 @@
 import uuid
 from typing import List
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Query
 from app.schemas.medication import MedicationCreate, MedicationRead, MedicationUpdate
 from app.services.medication import MedicationService
 from app.api.deps import get_current_user
 from app.db.models.users import User
-
 
 router = APIRouter()
 
@@ -16,20 +15,17 @@ async def create_medication(
     medication_service: MedicationService = Depends(MedicationService),
     current_user: User = Depends(get_current_user)
     ):
-    return await medication_service.create_medication(medication_in, user_id=current_user.id)
+    return await medication_service.create_medication(medication_in, current_user_id=current_user.id)
 
 
 @router.get("", response_model=List[MedicationRead])
 async def read_medication(
     skip: int = 0, 
-    limit: int = 100,
+    limit: int = Query(100, ge=1, le=100),
     medication_service: MedicationService = Depends(MedicationService),
     current_user: User = Depends(get_current_user)
 ):
-    medications = await medication_service.get_all_medication(user_id=current_user.id, skip=skip, limit=limit)
-    if not medications:
-        return []
-        
+    medications = await medication_service.get_all_medication(user_id=current_user.id, skip=skip, limit=limit)       
     return list(medications)
 
 

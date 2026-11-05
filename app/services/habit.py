@@ -19,6 +19,7 @@ class HabitService:
         self.crud = crud
         
     async def create_habit(self, create_in: HabitCreate, current_user_id: uuid.UUID) -> Habit:
+        # Imported inside the function: app.services.care_assignment imports from this module, so a top-level import would be circular.
         from app.db.crud.users import UserCRUD
         from app.db.crud.care_assignment import CareAssignmentCRUD
         from app.services.care_assignment import CareAssignmentService
@@ -55,9 +56,9 @@ class HabitService:
     
     async def update_habit(self, habit_id: uuid.UUID, user_id: uuid.UUID, user_in: HabitUpdate) -> Habit:
         db_object = await self.crud.get_habit_by_id(habit_id)
-        if not db_object or db_object.author_id != user_id:
         # Only the author may edit an entry. The subject can read their record
         # (see JournalCRUD.journal_for_user) but not alter what a caregiver wrote.
+        if not db_object or db_object.author_id != user_id:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Habit not found")
         update_data = user_in.model_dump(exclude_unset=True)
         updated_habit = await self.crud.update_habit(db_object, update_data)

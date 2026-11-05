@@ -1,11 +1,10 @@
 import uuid
 from typing import List
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Query
 from app.schemas.habit import HabitCreate, HabitRead, HabitUpdate
 from app.services.habit import HabitService
 from app.api.deps import get_current_user
 from app.db.models.users import User
-from fastapi import Query
 
 
 router = APIRouter()
