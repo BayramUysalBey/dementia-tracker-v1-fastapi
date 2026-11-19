@@ -111,3 +111,55 @@ async def test_cannot_create_journal_for_unassigned_patient(
     # 5. verify_caregiver_access must refuse
     assert response.status_code == 403
     assert response.json()["detail"] == "You are not assigned to this patient"
+
+
+@pytest.mark.asyncio
+async def test_cannot_create_journal_about_self(
+    client: AsyncClient,
+    journal_mock_data: dict
+):
+    # 1. A caregiver registers — keep the id from the response
+    caregiver_data = {
+            "first_name": "Care", "last_name": "Giver", "role": "caregiver",
+            "email": "self_author_journal@example.com", "password": "securepassword123"
+        }
+    response_create = await client.post("/api/v1/users/create", json=caregiver_data)
+    assert response_create.status_code == 201
+    caregiver_id = response_create.json()["id"]
+    
+    # 2. They log in
+    login_data = {
+        "username": caregiver_data["email"],
+        "password": caregiver_data["password"]
+    }
+    response_login = await client.post("/api/v1/auth/token", data=login_data)
+    assert response_login.status_code == 200
+    token = response_login.json()["access_token"]
+    auth_headers = {"Authorization": f"Bearer {token}"}
+    
+    # 3. They try to write a journal about THEMSELVES
+    journal_mock_data["user_id"] = caregiver_id
+    response = await client.post(
+        "/api/v1/journal",
+        json=journal_mock_data,
+        headers=auth_headers
+    )
+    
+    # 4. The self-authoring guard must refuse
+    assert response.status_code == 403
+    assert response.json()["detail"] == "Records must be authored by a caregiver, not by the patient"
+
+
+@pytest.mark.asyncio
+async def test_cannot_create_journal_for_nonexistent_patient(
+    client: AsyncClient,
+    caregiver_with_patient: dict,
+    journal_mock_data: dict
+):
+    auth_headers = caregiver_with_patient["auth_headers"]           # a logged-in caregiver
+    journal_data = {**journal_mock_data, "user_id": str(uuid.uuid4())}  # an id that belongs to nobody
+
+    response = await client.post("/api/v1/journal", json=journal_data, headers=auth_headers)
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Patient user not found"

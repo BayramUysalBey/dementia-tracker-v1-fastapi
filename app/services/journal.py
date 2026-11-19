@@ -7,6 +7,8 @@ from app.db.models.journal import Journal
 from app.schemas.journal import JournalCreate, JournalUpdate
 import uuid
 from fastapi import HTTPException, status, Depends
+from app.db.crud.care_assignment import CareAssignmentCRUD
+from app.services.care_assignment import CareAssignmentService
 
 
 class JournalService:
@@ -19,31 +21,8 @@ class JournalService:
         self.crud = crud
         
     async def create_journal(self, create_in: JournalCreate, current_user_id: uuid.UUID) -> Journal:
-        from app.db.crud.users import UserCRUD
-        from app.db.crud.care_assignment import CareAssignmentCRUD
-        from app.services.care_assignment import CareAssignmentService
-        # Records are authored by a caregiver about a patient. A user may not
-        # write a record about themselves — provenance matters for clinical reporting.
-        if create_in.user_id == current_user_id:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Records must be authored by a caregiver, not by the patient"
-            )
-        user_crud = UserCRUD(self.db)
-        patient = await user_crud.get_by_id(create_in.user_id)
-        if not patient:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Patient user not found"
-            )
-        care_service = CareAssignmentService(
-            db=self.db,
-            crud=CareAssignmentCRUD(self.db)
-        )
-        await care_service.verify_caregiver_access(
-            caregiver_id=current_user_id,
-            patient_id=create_in.user_id
-        )
+        care_service = CareAssignmentService(db=self.db, crud=CareAssignmentCRUD(self.db))
+        await care_service.ensure_can_author(author_id=current_user_id, patient_id=create_in.user_id)
 
         create_data = create_in.model_dump()
         create_data["author_id"] = current_user_id

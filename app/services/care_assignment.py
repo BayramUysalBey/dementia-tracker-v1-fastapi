@@ -72,3 +72,21 @@ class CareAssignmentService:
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="You are not assigned to this patient"
             )
+
+    async def ensure_can_author(self, author_id: uuid.UUID, patient_id: uuid.UUID) -> None:
+        # Records are authored by a caregiver about a patient. A user may not
+        # write a record about themselves — provenance matters for clinical reporting.
+        if author_id == patient_id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Records must be authored by a caregiver, not by the patient"
+            )
+
+        patient = await UserCRUD(self.db).get_by_id(patient_id)
+        if not patient:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Patient user not found"
+            )
+
+        await self.verify_caregiver_access(caregiver_id=author_id, patient_id=patient_id)
