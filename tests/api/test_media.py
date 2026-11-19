@@ -137,3 +137,26 @@ async def test_create_media_no_journal_id(client: AsyncClient, user_mock_data: d
     assert response_media.status_code == 201
     created_media = response_media.json()
     assert created_media.get("journal_id") is None
+
+
+@pytest.mark.asyncio
+async def test_upload_over_limit_returns_413(client: AsyncClient, caregiver_with_patient: dict, monkeypatch):
+    auth_headers = caregiver_with_patient["auth_headers"]
+    monkeypatch.setattr(settings, "MEDIA_MAX_UPLOAD_BYTES", 10)
+    fake_img_file = io.BytesIO(b"x" * 11)
+    files = {"file": ("test_image.jpg", fake_img_file, "image/jpeg")}
+    form_data = {"type": "photo", "name": "Sneaky upload2"}
+    response = await client.post("/api/v1/media", data=form_data, files=files, headers=auth_headers)
+    assert response.status_code == 413
+    assert response.json()["detail"] == "File too large"
+
+
+@pytest.mark.asyncio
+async def test_upload_at_limit_is_accepted(client: AsyncClient, caregiver_with_patient: dict, monkeypatch):
+    auth_headers = caregiver_with_patient["auth_headers"]
+    monkeypatch.setattr(settings, "MEDIA_MAX_UPLOAD_BYTES", 10)
+    fake_img_file = io.BytesIO(b"x" * 10)
+    files = {"file": ("test_image.jpg", fake_img_file, "image/jpeg")}
+    form_data = {"type": "photo", "name": "Exactly at the limit"}
+    response = await client.post("/api/v1/media", data=form_data, files=files, headers=auth_headers)
+    assert response.status_code == 201

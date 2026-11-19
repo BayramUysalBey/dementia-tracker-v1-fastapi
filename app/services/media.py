@@ -44,7 +44,7 @@ class MediaService:
             )
         unique_filename = f"{uuid.uuid4()}{file_extension}"
         file_path = os.path.join(settings.MEDIA_UPLOAD_DIR, unique_filename)
-        MAX_FILE_SIZE = 50 * 1024 * 1024  # 50 MB
+        MAX_FILE_SIZE = settings.MEDIA_MAX_UPLOAD_BYTES
 
         def write_file():
             total = 0

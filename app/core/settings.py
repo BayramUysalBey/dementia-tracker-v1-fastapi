@@ -13,9 +13,9 @@ class Settings(BaseSettings):
     SENTRY_DSN: str | None = None
     WEB_URL_TOKEN: str = ""
     WEB_URL_CREATE: str = ""
-    WEB_URL_HABIT: str = ""
-    
+    WEB_URL_HABIT: str = "" 
     MEDIA_UPLOAD_DIR: str = "static/uploads/media"
+    MEDIA_MAX_UPLOAD_BYTES: int = 50 * 1024 * 1024  # 50 MB
 
     @field_validator("SECRET_KEY")
     @classmethod
