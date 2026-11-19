@@ -160,3 +160,4 @@ async def test_upload_at_limit_is_accepted(client: AsyncClient, caregiver_with_p
     form_data = {"type": "photo", "name": "Exactly at the limit"}
     response = await client.post("/api/v1/media", data=form_data, files=files, headers=auth_headers)
     assert response.status_code == 201
+    assert response.json()["media_url"].endswith(".jpg")
