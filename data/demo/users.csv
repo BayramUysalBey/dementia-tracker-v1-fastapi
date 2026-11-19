@@ -1,0 +1,9 @@
+email,first_name,last_name,role,password
+patient1@demo.test,Joe,Doe,patient,demo-password-123
+patient2@demo.test,Jane,Elf,patient,demo-password-123
+patient3@demo.test,August,Burn,patient,demo-password-123
+patient4@demo.test,Blake,Love,patient,demo-password-123
+caregiver1@demo.test,Cameron,Cruz,caregiver,demo-password-123
+caregiver2@demo.test,Collin,Pose,caregiver,demo-password-123
+caregiver3@demo.test,Zack,Worst,caregiver,demo-password-123
+doctor1@demo.test,Chris,Dark,doctor,demo-password-123
