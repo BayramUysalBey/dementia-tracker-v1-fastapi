@@ -1,0 +1,5 @@
+caregiver_email,patient_email,name,target_frequency
+caregiver1@example.com,patient1@example.com,Morning walk,Daily
+caregiver2@example.com,patient2@example.com,Reading book,Daily
+caregiver3@example.com,patient3@example.com,Morning walk,Daily
+caregiver3@example.com,patient4@example.com,Reading book,Daily

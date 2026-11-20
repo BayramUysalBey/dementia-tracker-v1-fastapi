@@ -73,6 +73,8 @@ mdurl==0.1.2
     #   markdown-it-py
 msgpack==1.2.4
     # via cachecontrol
+numpy==2.5.5
+    # via pandas
 packageurl-python==0.17.6
     # via cyclonedx-python-lib
 packaging==26.3
@@ -83,6 +85,8 @@ packaging==26.3
     #   pytest
     #   sphinx
     #   wheel
+pandas==3.1.1
+    # via -r requirements-dev.in
 pip-api==0.0.35
     # via pip-audit
 pip-audit==2.10.1
@@ -120,6 +124,8 @@ pytest-asyncio==1.4.1
     # via -r requirements-dev.in
 pytest-cov==7.1.0
     # via -r requirements-dev.in
+python-dateutil==4.0.0
+    # via pandas
 requests==2.34.2
     # via
     #   cachecontrol
@@ -153,6 +159,10 @@ tomli==2.5.0
     # via pip-audit
 tomli-w==1.2.0
     # via pip-audit
+tzdata==2026.6
+    # via
+    #   pandas
+    #   python-dateutil
 urllib3==2.6.3
     # via
     #   -c requirements.txt

@@ -1,0 +1,5 @@
+caregiver_email,patient_email,medication_type,medication_name,dosage
+caregiver1@example.com,patient1@example.com,Pill,Testamine,5 mg
+caregiver2@example.com,patient2@example.com,Pill,Testamine,10 mg
+caregiver3@example.com,patient3@example.com,Pill,Testamine,10 mg
+caregiver3@example.com,patient4@example.com,Liquid,Testokane,10 ml
