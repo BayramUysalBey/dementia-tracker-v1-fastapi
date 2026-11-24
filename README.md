@@ -30,6 +30,7 @@ You can try out the fully functional, cloud-deployed version of the application 
 2. **Install Dependencies**:
 
    The project utilizes pip-tools for dependency management. Install dependencies via the lockfile:
+
    ```bash
    pip install -r requirements.txt
    ```
@@ -93,6 +94,7 @@ cd docs
 .\make.bat html  # On Windows
 make html        # On Linux/macOS
 ```
+
 The generated documentation can be viewed by opening `docs/build/html/index.html` in a web browser.
 
 ## Testing
@@ -106,6 +108,15 @@ Execute the full test suite from the root directory:
 ```bash
 pytest
 ```
+
+## Demo Data
+
+Start the app locally, then on an empty local database run:
+
+    python scripts/seed_demo_data.py
+
+It creates demo users, care assignments, habits and medications through the API,
+so every record passes the same validation and access rules as real data.
 
 ## Available Commands (Makefile)
 
